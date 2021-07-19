@@ -49,7 +49,6 @@ namespace Battle_Engine
             gamePlayState = new GamePlayState(this);
             ChoiceState = new PlayerChoiceScreen(this);
             inputSystem = new InputSystem(this);
-
             _stateManager.PushState(gamePlayState);
         }
 

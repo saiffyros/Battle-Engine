@@ -13,7 +13,12 @@ namespace Battle_Engine
 
         }
 
-        public static KeyboardState previousKeyboardState;
+        private static KeyboardState _previousKeyboardState;
+
+        public static KeyboardState previousKeyboardState
+        {
+            get { return _previousKeyboardState; }
+        }
 
         public static bool CheckKeyPressed(Keys key)
         {
@@ -29,13 +34,13 @@ namespace Battle_Engine
                 state = false;
             }
 
-            previousKeyboardState = keyboardStateNew;
+            _previousKeyboardState = keyboardStateNew;
             return state;
         }
 
         public override void Initialize()
         {
-            previousKeyboardState = Keyboard.GetState();
+            _previousKeyboardState = Keyboard.GetState();
         }
 
         //public override void Update(GameTime gameTime)

@@ -9,26 +9,18 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Battle_Engine
 {
-    public class Button : Component
+    public class Button : DrawableGameComponent
     {
+        Game1 gameRef;
         private MouseState _currentMouse;
-
         private SpriteFont _font;
-
         private bool _isHovering;
-
         private MouseState _previousMouse;
-
         private Texture2D _texture;
-
         public event EventHandler Click;
-
         public bool Clicked { get; private set; }
-
         public Color PenColour { get; set; }
-
         public Vector2 Position { get; set; }
-
         public Rectangle Rectangle
         {
             get
@@ -39,30 +31,33 @@ namespace Battle_Engine
 
         public string Text { get; set; }
 
-        public Button(Texture2D texture, SpriteFont font)
+        public Button(Game game, Texture2D texture, SpriteFont font) : base(game)
         {
+            this.gameRef = (Game1)game;
             _texture = texture;
-
             _font = font;
-
             PenColour = Color.Black;
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime)
         {
             var colour = Color.White;
 
             if (_isHovering)
                 colour = Color.Gray;
 
-            spriteBatch.Draw(_texture, Rectangle, colour);
+            gameRef.SpriteBatch.Begin();
+            gameRef.SpriteBatch.Draw(_texture, Rectangle, colour);
+            gameRef.SpriteBatch.End();
 
             if (!string.IsNullOrEmpty(Text))
             {
                 var x = (Rectangle.X + (Rectangle.Width / 2)) - (_font.MeasureString(Text).X / 2);
                 var y = (Rectangle.Y + (Rectangle.Height / 2)) - (_font.MeasureString(Text).Y / 2);
 
-                spriteBatch.DrawString(_font, Text, new Vector2(x, y), PenColour);
+                gameRef.SpriteBatch.Begin();
+                gameRef.SpriteBatch.DrawString(_font, Text, new Vector2(x, y), PenColour);
+                gameRef.SpriteBatch.End();
             }
         }
 

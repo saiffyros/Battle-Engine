@@ -7,9 +7,7 @@ namespace Battle_Engine
 {
     public class Player : Monster
     {
-        [ContentSerializer]
         public string weapon { get; set; }
-        [ContentSerializer]
         public int xp { get; set; }
         public List<Maneuver> listManeuvers = new List<Maneuver>();
 

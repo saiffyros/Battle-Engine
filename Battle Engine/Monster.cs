@@ -7,15 +7,11 @@ using System.Text;
 
 namespace Battle_Engine
 {
-    public class Monster : Component
+    public class Monster
     {
-        [ContentSerializer]
         public string name { get; set; }
-        [ContentSerializer]
         public int health { get; set; }
-        [ContentSerializer]
         public int power { get; set; }
-        [ContentSerializer]
         public int luck { get; set; }
 
         public Monster(string a, int b, int c, int f)
@@ -29,16 +25,6 @@ namespace Battle_Engine
         public Monster()
         {
 
-        }
-
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            
         }
     }
 }

@@ -10,9 +10,10 @@ namespace Battle_Engine
 {
     public class PlayerChoiceScreen : GameState
     {
-        private List<Button> _gameComponents = new List<Button>();
+        //private List<Button> _gameComponents = new List<Button>();
         private SpriteFont font;
         private Maneuver SelectedManeuver;
+
 
         public Maneuver selectedManeuver { get { return SelectedManeuver; } }
 
@@ -21,13 +22,19 @@ namespace Battle_Engine
 
         }
 
+        public override void Initialize()
+        {
+
+            base.Initialize();
+        }
+
         protected override void LoadContent()
         {
             font = GameRef.Content.Load<SpriteFont>("font");
 
             foreach (Maneuver maneuver in GameRef.mainPlayer.listManeuvers)
             {
-                var AttackBtn = new Button(GameRef.Content.Load<Texture2D>("Button"), font)
+                var AttackBtn = new Button(GameRef, GameRef.Content.Load<Texture2D>("Button"), font)
                 {
                     Position = new Vector2((GameRef.mainPlayer.listManeuvers.IndexOf(maneuver) + 1) * 150, 200),
                     Text = maneuver.Name,
@@ -35,7 +42,8 @@ namespace Battle_Engine
 
                 AttackBtn.Click += delegate { BackToPlayState(AttackBtn); };
 
-                _gameComponents.Add(AttackBtn);
+                Components.Add(AttackBtn);
+                //_gameComponents.Add(AttackBtn);
             }
 
             base.LoadContent();
@@ -56,10 +64,10 @@ namespace Battle_Engine
 
         public override void Update(GameTime gameTime)
         {
-            foreach (var component in _gameComponents)
-            {
-                component.Update(gameTime);
-            }
+            //foreach (var component in _gameComponents)
+            //{
+            //    component.Update(gameTime);
+            //}
 
             base.Update(gameTime);
         }
@@ -75,10 +83,10 @@ namespace Battle_Engine
             GameRef.SpriteBatch.DrawString(font, Game1.GenericMonster.name, new Vector2(680, 50), Color.Black);
             GameRef.SpriteBatch.DrawString(font, Game1.GenericMonster.health.ToString(), new Vector2(680, 70), Color.Black);
 
-            foreach (var component in _gameComponents)
-            {
-                component.Draw(gameTime, GameRef.SpriteBatch);
-            }
+            //foreach (var component in _gameComponents)
+            //{
+            //    component.Draw(gameTime, GameRef.SpriteBatch);
+            //}
 
             GameRef.SpriteBatch.End();
 

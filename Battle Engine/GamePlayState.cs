@@ -98,7 +98,7 @@ namespace Battle_Engine
             StateManager stateManager = (StateManager)GameRef.Services.GetService(typeof(IStateManager));
             stateManager.PushState(GameRef.ChoiceState);
             
-            //I CAN RETRIVE THE SERVICE OR USE THE GAMEREF ONE
+            //I CAN RETRIVE THE SERVICE OR USE THE GAMEREF ONE (Cynthia that the said last one is better, no GC)
 
             //GameRef.stateManager.PushState(GameRef.ChoiceState);
         }

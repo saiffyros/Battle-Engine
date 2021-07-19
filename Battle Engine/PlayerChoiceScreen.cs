@@ -10,7 +10,6 @@ namespace Battle_Engine
 {
     public class PlayerChoiceScreen : GameState
     {
-        //private List<Button> _gameComponents = new List<Button>();
         private SpriteFont font;
         private Maneuver SelectedManeuver;
         private Texture2D buttonTexture;
@@ -33,6 +32,9 @@ namespace Battle_Engine
             font = GameRef.Content.Load<SpriteFont>("font");
             buttonTexture = GameRef.Content.Load<Texture2D>("Button");
 
+            var label = new Label(GameRef, "Choose an action!", font, new Vector2(300, 5));
+            LocalComponents.Add(label);
+
             foreach (Maneuver maneuver in GameRef.mainPlayer.listManeuvers)
             {
                 var AttackBtn = new Button(GameRef, buttonTexture, font)
@@ -43,13 +45,13 @@ namespace Battle_Engine
 
                 AttackBtn.Click += delegate { BackToPlayState(AttackBtn); };
 
-                LocalComponents.Add(AttackBtn); // GameState.Components, not Game.Components
+                LocalComponents.Add(AttackBtn); // GameState.LocalComponents, not Game.Components
             }
 
             base.LoadContent();
         }
 
-        public void BackToPlayState(Button button)
+        public void BackToPlayState(Button button) //can be improved. A callback maybe?
         {
             foreach (Maneuver maneuver in GameRef.mainPlayer.listManeuvers)
             {

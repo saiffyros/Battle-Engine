@@ -12,10 +12,8 @@ namespace Battle_Engine
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        //public Employee test;
         public static SpriteFont font;
-        //private Player PlayerTest;
-        //private Monster MonsterTest;
+
         public static Texture2D dialogueBox;
         public Maneuver Attack;
         public Maneuver Wait;
@@ -46,7 +44,7 @@ namespace Battle_Engine
             IsMouseVisible = true;
 
             _stateManager = new StateManager(this);
-            //Components.Add(_stateManager);
+            Components.Add(_stateManager);
             gamePlayState = new GamePlayState(this);
             ChoiceState = new PlayerChoiceScreen(this);
             inputSystem = new InputSystem(this);

@@ -23,10 +23,11 @@ namespace Battle_Engine
         public static KeyboardState keyboardState;
         public static KeyboardState previousKeyboardState;
 
-        public static Player MainPlayer;
-        public static Monster GenericMonster;
-
+        private Player MainPlayer;
         public Player mainPlayer { get { return MainPlayer; } }
+
+        private Monster GenericMonster;
+        public Monster genericMonster { get { return GenericMonster; } }
 
         private Queue<string> _messages = new Queue<string>();
         public Queue<string> messages { get { return _messages; } }
@@ -64,8 +65,8 @@ namespace Battle_Engine
         public void AttackMethod()
         {
             _stateManager.ChangeState(gamePlayState);
-            Game1.GenericMonster.health -= Game1.MainPlayer.power;
-            gamePlayState.dialogueText = "You attack the enemy with " + Game1.MainPlayer.weapon + " causing " + Game1.MainPlayer.power + " damage points.";
+            GenericMonster.health -= MainPlayer.power;
+            gamePlayState.dialogueText = "You attack the enemy with " + MainPlayer.weapon + " causing " + MainPlayer.power + " damage points.";
         }
 
         public void WaitMethod()

@@ -70,8 +70,8 @@ namespace Battle_Engine
 
             GameRef.SpriteBatch.Begin();
 
-            GameRef.SpriteBatch.DrawString(font, Game1.MainPlayer.name, new Vector2(50, 50), Color.Black);
-            GameRef.SpriteBatch.DrawString(font, Game1.MainPlayer.health.ToString(), new Vector2(50, 70), Color.Black);
+            GameRef.SpriteBatch.DrawString(font, GameRef.MainPlayer.name, new Vector2(50, 50), Color.Black);
+            GameRef.SpriteBatch.DrawString(font, GameRef.MainPlayer.health.ToString(), new Vector2(50, 70), Color.Black);
 
             GameRef.SpriteBatch.DrawString(font, Game1.GenericMonster.name, new Vector2(680, 50), Color.Black);
             GameRef.SpriteBatch.DrawString(font, Game1.GenericMonster.health.ToString(), new Vector2(680, 70), Color.Black);
@@ -118,7 +118,7 @@ namespace Battle_Engine
 
         public void MonsterAttack()
         {
-            Game1.MainPlayer.health -= Game1.GenericMonster.power;
+            GameRef.MainPlayer.health -= Game1.GenericMonster.power;
             //GameRef.messages.Clear();
             //GameRef.messages.Enqueue("Monster attack you causing  " + Game1.GenericMonster.power + " damage points");
             dialogueText = "Monster attack you causing " + Game1.GenericMonster.power + " damage points.";
@@ -126,14 +126,14 @@ namespace Battle_Engine
 
         public void CheckPlayerHealth()
         {
-            if (Game1.MainPlayer.health < 1)
+            if (GameRef.MainPlayer.health < 1)
             {
                 dialogueText = "You died. Enemy won.";
                 PlayerAlive = false;
             }
             else
             {
-                dialogueText = "You have " + Game1.MainPlayer.health.ToString() + " health points.";
+                dialogueText = "You have " + GameRef.MainPlayer.health.ToString() + " health points.";
             }
         }
     }

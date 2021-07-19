@@ -80,8 +80,8 @@ namespace Battle_Engine
             GameRef.SpriteBatch.DrawString(font, GameRef.mainPlayer.name, new Vector2(50, 50), Color.Black);
             GameRef.SpriteBatch.DrawString(font, GameRef.mainPlayer.health.ToString(), new Vector2(50, 70), Color.Black);
 
-            GameRef.SpriteBatch.DrawString(font, Game1.GenericMonster.name, new Vector2(680, 50), Color.Black);
-            GameRef.SpriteBatch.DrawString(font, Game1.GenericMonster.health.ToString(), new Vector2(680, 70), Color.Black);
+            GameRef.SpriteBatch.DrawString(font, GameRef.genericMonster.name, new Vector2(680, 50), Color.Black);
+            GameRef.SpriteBatch.DrawString(font, GameRef.genericMonster.health.ToString(), new Vector2(680, 70), Color.Black);
 
             //foreach (var component in _gameComponents)
             //{

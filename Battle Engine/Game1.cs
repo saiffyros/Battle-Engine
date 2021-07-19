@@ -77,9 +77,6 @@ namespace Battle_Engine
 
         protected override void LoadContent()
         {
-            //test = new Employee() { FirstName = "Jonas", LastName = "Oliveira" };
-            //Serializer.Serialize("testXML3", test);
-
             Attack = new Maneuver("Attack", "A simple attack", 50, AttackMethod);
             Wait = new Maneuver("Wait", "Skipping the turn", 0, WaitMethod);
 
@@ -87,18 +84,16 @@ namespace Battle_Engine
 
             MainPlayer.listManeuvers.Add(Attack);
             MainPlayer.listManeuvers.Add(Wait);
+
             //Serializer.Serialize("player", PlayerTest);
             //Serializer.Serialize("monster", MonsterTest);
 
-            //MainPlayer = Content.Load<Player>("player");
-            //GenericMonster = Content.Load<Monster>("monster");
             GenericMonster = new Monster("Monster", 150, 30, 2);
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("font");
             dialogueBox = Content.Load<Texture2D>("dialogueBox");
             Components.Add(inputSystem);
-            // TODO: use this.Content to load your game content here
         }
 
 

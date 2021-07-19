@@ -70,11 +70,11 @@ namespace Battle_Engine
 
             GameRef.SpriteBatch.Begin();
 
-            GameRef.SpriteBatch.DrawString(font, GameRef.MainPlayer.name, new Vector2(50, 50), Color.Black);
-            GameRef.SpriteBatch.DrawString(font, GameRef.MainPlayer.health.ToString(), new Vector2(50, 70), Color.Black);
+            GameRef.SpriteBatch.DrawString(font, GameRef.mainPlayer.name, new Vector2(50, 50), Color.Black);
+            GameRef.SpriteBatch.DrawString(font, GameRef.mainPlayer.health.ToString(), new Vector2(50, 70), Color.Black);
 
-            GameRef.SpriteBatch.DrawString(font, Game1.GenericMonster.name, new Vector2(680, 50), Color.Black);
-            GameRef.SpriteBatch.DrawString(font, Game1.GenericMonster.health.ToString(), new Vector2(680, 70), Color.Black);
+            GameRef.SpriteBatch.DrawString(font, GameRef.genericMonster.name, new Vector2(680, 50), Color.Black);
+            GameRef.SpriteBatch.DrawString(font, GameRef.genericMonster.health.ToString(), new Vector2(680, 70), Color.Black);
 
             GameRef.SpriteBatch.Draw(Game1.dialogueBox, new Vector2(0, 300), Color.White);
             GameRef.SpriteBatch.DrawString(font, dialogueText, new Vector2(200, 400), Color.White);
@@ -105,7 +105,7 @@ namespace Battle_Engine
 
         public void CheckMonsterHealth()
         {
-            if (Game1.GenericMonster.health > 0)
+            if (GameRef.genericMonster.health > 0)
             {
                 dialogueText = "Monster is still alive.";
             }
@@ -118,22 +118,22 @@ namespace Battle_Engine
 
         public void MonsterAttack()
         {
-            GameRef.MainPlayer.health -= Game1.GenericMonster.power;
+            GameRef.mainPlayer.health -= GameRef.genericMonster.power;
             //GameRef.messages.Clear();
             //GameRef.messages.Enqueue("Monster attack you causing  " + Game1.GenericMonster.power + " damage points");
-            dialogueText = "Monster attack you causing " + Game1.GenericMonster.power + " damage points.";
+            dialogueText = "Monster attack you causing " + GameRef.genericMonster.power + " damage points.";
         }
 
         public void CheckPlayerHealth()
         {
-            if (GameRef.MainPlayer.health < 1)
+            if (GameRef.mainPlayer.health < 1)
             {
                 dialogueText = "You died. Enemy won.";
                 PlayerAlive = false;
             }
             else
             {
-                dialogueText = "You have " + GameRef.MainPlayer.health.ToString() + " health points.";
+                dialogueText = "You have " + GameRef.mainPlayer.health.ToString() + " health points.";
             }
         }
     }

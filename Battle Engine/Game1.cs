@@ -55,7 +55,6 @@ namespace Battle_Engine
 
         protected override void Initialize()
         {
-            //test = new Employee();
             dialogueBox = new Texture2D(GraphicsDevice, 10, 10);
             previousKeyboardState = Keyboard.GetState();
 

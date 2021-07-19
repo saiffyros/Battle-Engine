@@ -13,7 +13,7 @@ namespace Battle_Engine
         //private List<Button> _gameComponents = new List<Button>();
         private SpriteFont font;
         private Maneuver SelectedManeuver;
-
+        private Texture2D buttonTexture;
 
         public Maneuver selectedManeuver { get { return SelectedManeuver; } }
 
@@ -31,10 +31,11 @@ namespace Battle_Engine
         protected override void LoadContent()
         {
             font = GameRef.Content.Load<SpriteFont>("font");
+            buttonTexture = GameRef.Content.Load<Texture2D>("Button");
 
             foreach (Maneuver maneuver in GameRef.mainPlayer.listManeuvers)
             {
-                var AttackBtn = new Button(GameRef, GameRef.Content.Load<Texture2D>("Button"), font)
+                var AttackBtn = new Button(GameRef, buttonTexture, font)
                 {
                     Position = new Vector2((GameRef.mainPlayer.listManeuvers.IndexOf(maneuver) + 1) * 150, 200),
                     Text = maneuver.Name,
@@ -42,8 +43,7 @@ namespace Battle_Engine
 
                 AttackBtn.Click += delegate { BackToPlayState(AttackBtn); };
 
-                Components.Add(AttackBtn);
-                //_gameComponents.Add(AttackBtn);
+                LocalComponents.Add(AttackBtn); // GameState.Components, not Game.Components
             }
 
             base.LoadContent();

@@ -31,7 +31,9 @@ namespace Battle_Engine
 
         public StateManager(Game game) : base(game)
         {
-            Game.Services.AddService(typeof(IStateManager), this);
+            Game.Services.AddService(typeof(IStateManager), this); //IMPORTANT
+        //Lastly, back in Game1, you create an instance of your class, and then add it to the services
+        //collection with the type of the interface.
         }
 
         public void PushState(GameState state)

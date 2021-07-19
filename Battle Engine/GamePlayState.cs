@@ -94,7 +94,13 @@ namespace Battle_Engine
         public void ShowChoiceMenu()
         {
             dialogueText = "Checking action!";
-            GameRef.stateManager.PushState(GameRef.ChoiceState);
+
+            StateManager stateManager = (StateManager)GameRef.Services.GetService(typeof(IStateManager));
+            stateManager.PushState(GameRef.ChoiceState);
+            
+            //I CAN RETRIVE THE SERVICE OR USE THE GAMEREF ONE
+
+            //GameRef.stateManager.PushState(GameRef.ChoiceState);
         }
 
         public void PlayerAction()

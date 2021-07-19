@@ -14,7 +14,7 @@ namespace Battle_Engine
         protected readonly List<GameComponent> _childComponents;
         protected Game1 GameRef;
 
-        public List<GameComponent> Components
+        public List<GameComponent> LocalComponents
         {
             get { return _childComponents; }
         }

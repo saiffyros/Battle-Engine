@@ -11,13 +11,15 @@ namespace Battle_Engine
     public class PlayerChoiceScreen : GameState
     {
         private List<Button> _gameComponents = new List<Button>();
-        private InputSystem inputSystem;
         private SpriteFont font;
         private Maneuver SelectedManeuver;
 
         public Maneuver selectedManeuver { get { return SelectedManeuver; } }
 
-        public PlayerChoiceScreen(Game game) : base(game) { }
+        public PlayerChoiceScreen(Game game) : base(game)
+        {
+
+        }
 
         protected override void LoadContent()
         {
@@ -35,9 +37,6 @@ namespace Battle_Engine
 
                 _gameComponents.Add(AttackBtn);
             }
-
-            inputSystem = new InputSystem();
-            inputSystem.Initialize();
 
             base.LoadContent();
         }
@@ -62,7 +61,6 @@ namespace Battle_Engine
                 component.Update(gameTime);
             }
 
-            inputSystem.Update(gameTime);
             base.Update(gameTime);
         }
 

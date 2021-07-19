@@ -10,7 +10,6 @@ namespace Battle_Engine
 {
     public class GamePlayState : GameState
     {
-        private InputSystem inputSystem;
         public static int listIndex = 0;
         private ActionManager actionManager;
         public string dialogueText = "Let's Fight!";
@@ -18,12 +17,15 @@ namespace Battle_Engine
         private bool MonsterAlive = true;
         private SpriteFont font;
 
-        public GamePlayState(Game game) : base(game) { } //add enemy as a parameter
+        public GamePlayState(Game game) : base(game)
+        {
+
+        } //add enemy as a parameter
 
         public override void Initialize()
         {
             Game1.previousKeyboardState = Keyboard.GetState();
-            inputSystem = new InputSystem();
+            
             actionManager = new ActionManager();
             font = GameRef.Content.Load<SpriteFont>("font");
 
@@ -33,8 +35,6 @@ namespace Battle_Engine
             actionManager.SetAction(() => CheckMonsterHealth());
             actionManager.SetAction(() => MonsterAttack());
             actionManager.SetAction(() => CheckPlayerHealth());
-
-            inputSystem.Initialize();
         }
 
         protected override void LoadContent()
@@ -47,7 +47,7 @@ namespace Battle_Engine
             if (listIndex > 4)
                 listIndex = 0;
 
-            if (inputSystem.CheckKeyPressed(Keys.Q))
+            if (InputSystem.CheckKeyPressed(Keys.Q))
             {
                 if (PlayerAlive && MonsterAlive)
                 {
@@ -60,8 +60,6 @@ namespace Battle_Engine
                     GameRef.Exit();
                 }
             }
-
-            inputSystem.Update(gameTime);
 
             base.Update(gameTime);
         }

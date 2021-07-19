@@ -34,7 +34,7 @@ namespace Battle_Engine
         private StateManager _stateManager;
         public StateManager stateManager { get { return _stateManager; } }
         public SpriteBatch SpriteBatch { get { return _spriteBatch; } }
-
+        public InputSystem inputSystem;
         public PlayerChoiceScreen ChoiceState { get; private set; }
         public GamePlayState gamePlayState { get; private set; }
 
@@ -48,6 +48,7 @@ namespace Battle_Engine
             //Components.Add(_stateManager);
             gamePlayState = new GamePlayState(this);
             ChoiceState = new PlayerChoiceScreen(this);
+            inputSystem = new InputSystem(this);
 
             _stateManager.PushState(gamePlayState);
         }
@@ -96,7 +97,7 @@ namespace Battle_Engine
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("font");
             dialogueBox = Content.Load<Texture2D>("dialogueBox");
-
+            Components.Add(inputSystem);
             // TODO: use this.Content to load your game content here
         }
 

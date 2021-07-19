@@ -6,32 +6,41 @@ using Microsoft.Xna.Framework;
 
 namespace Battle_Engine
 {
-    public class InputSystem
+    public class InputSystem : GameComponent
     {
-        public KeyboardState keyboardState;
-        public KeyboardState previousKeyboardState;
-
-        public bool CheckKeyPressed(Keys key)
+        public InputSystem (Game game) : base(game)
         {
-            previousKeyboardState = keyboardState;
-            KeyboardState keyboardStateNew = Keyboard.GetState();
 
-            if (keyboardStateNew.IsKeyDown(key) && !previousKeyboardState.IsKeyDown(key))
-            {
-                return true;
-            }
-
-            return false;
         }
 
-        public void Initialize()
+        public static KeyboardState previousKeyboardState;
+
+        public static bool CheckKeyPressed(Keys key)
+        {
+            KeyboardState keyboardStateNew = Keyboard.GetState();
+
+            bool state;
+            if (keyboardStateNew.IsKeyDown(key) && !previousKeyboardState.IsKeyDown(key))
+            {
+                state = true;
+            }
+            else
+            {
+                state = false;
+            }
+
+            previousKeyboardState = keyboardStateNew;
+            return state;
+        }
+
+        public override void Initialize()
         {
             previousKeyboardState = Keyboard.GetState();
         }
 
-        public void Update(GameTime gameTime)
-        {
-            keyboardState = Keyboard.GetState();
-        }
+        //public override void Update(GameTime gameTime)
+        //{
+
+        //}
     }
 }

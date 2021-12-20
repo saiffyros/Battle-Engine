@@ -19,5 +19,10 @@ namespace Battle_Engine
             Damage = _damage;
             ManeuverAction = _maneuver;
         }
+
+        public Action ManeuverActionMethod()
+        {
+            return ManeuverAction;
+        }
     }
 }

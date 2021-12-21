@@ -61,15 +61,13 @@ namespace Battle_Engine
 
         public void AttackMethod()
         {
-            _stateManager.ChangeState(gamePlayState);
             GenericMonster.health -= MainPlayer.power;
             gamePlayState.dialogueText = "You attack the enemy with " + MainPlayer.weapon + " causing " + MainPlayer.power + " damage points.";
         }
 
         public void WaitMethod()
         {
-            //gamePlayState.dialogueText = "You skipped your turn"; //not working
-            _stateManager.ChangeState(gamePlayState);   //2 clicks problem
+            gamePlayState.dialogueText = "You skipped your turn";
         }
 
         protected override void LoadContent()
@@ -81,9 +79,6 @@ namespace Battle_Engine
 
             MainPlayer.listManeuvers.Add(Attack);
             MainPlayer.listManeuvers.Add(Wait);
-
-            //Serializer.Serialize("player", PlayerTest);
-            //Serializer.Serialize("monster", MonsterTest);
 
             GenericMonster = new Monster("Monster", 150, 30, 2);
 

@@ -11,11 +11,14 @@ namespace Battle_Engine
     public class GamePlayState : GameState
     {
         public static int listIndex = 0;
-        private ActionManager actionManager;
+        public static ActionManager actionManager;
         public string dialogueText = "Let's Fight!";
         private bool PlayerAlive = true;
         private bool MonsterAlive = true;
         private SpriteFont font;
+        private Rectangle windowArea = new Rectangle(0, 0, 800, 600);
+        private Rectangle mouseRectangle = new Rectangle(0, 0, 1, 1);
+        MouseState previousMouseState;
 
         public GamePlayState(Game game) : base(game)
         {
@@ -24,7 +27,7 @@ namespace Battle_Engine
 
         public override void Initialize()
         {
-            Game1.previousKeyboardState = Keyboard.GetState();
+            previousMouseState = Mouse.GetState();
             
             actionManager = new ActionManager();
             font = GameRef.Content.Load<SpriteFont>("font");
@@ -44,22 +47,32 @@ namespace Battle_Engine
 
         public override void Update(GameTime gameTime)
         {
-            if (listIndex > 4)
-                listIndex = 0;
+            MouseState mouseState = Mouse.GetState();
 
-            if (InputSystem.CheckKeyPressed(Keys.Q))
-            {
-                if (PlayerAlive && MonsterAlive)
+            mouseRectangle.X = mouseState.X;
+            mouseRectangle.Y = mouseState.Y;
+            //if (windowArea.Intersects(new Rectangle(mouseState.X, mouseState.Y, 1, 1)))
+            if (windowArea.Intersects(mouseRectangle))
+                if (previousMouseState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Released)
                 {
-                    listIndex += 1;
-                    actionManager.InvokeAction(listIndex);
+                    Console.WriteLine(listIndex);
+
+                    if (listIndex > 4)
+                        listIndex = 0;
+
+                    if (PlayerAlive && MonsterAlive)
+                    {
+                        listIndex += 1;
+                        actionManager.InvokeAction(listIndex);
+                    }
+                    else
+                    {
+                        dialogueText = "Game is over";
+                        GameRef.Exit();
+                    }
                 }
-                else
-                {
-                    dialogueText = "Game is over";
-                    GameRef.Exit();
-                }
-            }
+
+            previousMouseState = mouseState;
 
             base.Update(gameTime);
         }
@@ -93,7 +106,7 @@ namespace Battle_Engine
 
         public void ShowChoiceMenu()
         {
-            dialogueText = "Checking action!";
+            //dialogueText = "Checking action!";
 
             StateManager stateManager = (StateManager)GameRef.Services.GetService(typeof(IStateManager));
             stateManager.PushState(GameRef.ChoiceState);
@@ -113,7 +126,7 @@ namespace Battle_Engine
         {
             if (GameRef.genericMonster.health > 0)
             {
-                dialogueText = "Monster is still alive.";
+                dialogueText = "Monster prepares to attack";
             }
             else
             {

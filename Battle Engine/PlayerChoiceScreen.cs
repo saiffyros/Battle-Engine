@@ -43,7 +43,7 @@ namespace Battle_Engine
                     Text = maneuver.Name,
                 };
 
-                AttackBtn.Click += delegate { BackToPlayState(AttackBtn); };
+                AttackBtn.Click += delegate { SelectedManeuver = maneuver; BackToPlayState(AttackBtn); };
 
                 LocalComponents.Add(AttackBtn); // GameState.LocalComponents, not Game.Components
             }
@@ -53,15 +53,19 @@ namespace Battle_Engine
 
         public void BackToPlayState(Button button) //can be improved. A callback maybe?
         {
-            foreach (Maneuver maneuver in GameRef.mainPlayer.listManeuvers)
-            {
-                if (maneuver.Name == button.Text)
-                {
-                    SelectedManeuver = maneuver;
-                }
-            }
+            //foreach (Maneuver maneuver in GameRef.mainPlayer.listManeuvers)
+            //{
+            //    if (maneuver.Name == button.Text)
+            //    {
+            //        SelectedManeuver = maneuver;
+            //    }
+            //}
 
             GameRef.stateManager.ChangeState(GameRef.gamePlayState);
+            GamePlayState.listIndex += 1;
+            Console.WriteLine("From choice " + GamePlayState.listIndex);
+            GamePlayState.actionManager.InvokeAction(GamePlayState.listIndex);
+
         }
 
         public override void Update(GameTime gameTime)

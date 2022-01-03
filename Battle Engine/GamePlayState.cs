@@ -12,7 +12,6 @@ namespace Battle_Engine
     {
         public static int listIndex = 0;
         public static ActionManager actionManager;
-        public string dialogueText = "Let's Fight!";
         private bool PlayerAlive = true;
         private bool MonsterAlive = true;
         private SpriteFont font;
@@ -52,6 +51,7 @@ namespace Battle_Engine
             actionManager.SetAction(() => PlayerAnimation());
             actionManager.SetAction(() => PlayerAction());
             actionManager.SetAction(() => CheckMonsterHealth());
+            actionManager.SetAction(() => MonsterAnimation());
             actionManager.SetAction(() => MonsterAttack());
             actionManager.SetAction(() => CheckPlayerHealth());
 
@@ -78,7 +78,7 @@ namespace Battle_Engine
                 {
                     Console.WriteLine(listIndex);
 
-                    if (listIndex > 5)
+                    if (listIndex > 6)
                         listIndex = 0;
 
                     if (PlayerAlive && MonsterAlive)
@@ -88,7 +88,7 @@ namespace Battle_Engine
                     }
                     else
                     {
-                        st = "Game is over";
+                        st = "Game is over.";
                         NextLineMethod(st);
                         //dialogueText = "Game is over";
                         gameRef.Exit();
@@ -144,33 +144,45 @@ namespace Battle_Engine
                 //GameRef.SpriteBatch.DrawString(font, dialogueText, new Vector2(200, 400), Color.White);
             }
 
-
-
-            //foreach (string text in GameRef.messages)
-            //{
-            //    GameRef.SpriteBatch.DrawString(font, text, new Vector2(200, 450), Color.White);
-            //}
-
             //########## testing #####################################################
 
-            if (gameRef.playAnim)
-            {
-                //receive animation to play
-                //GameRef.animationIsPlaying = true;
-                gameRef.numf += (float)gameTime.TotalGameTime.TotalSeconds;
-                gameRef._spriteBatch.Draw(
-                    gameRef.currentAnimation.sprite, 
-                    new Rectangle(200, 200, 150, 150),
-                    gameRef.currentAnimation.ListaRetangulos[gameRef.currentAnimation.FrameAtual], 
-                    Color.White);
 
-                if (gameRef.numf > 500.0f)
+
+            if (gameRef.playPlayerAnim || gameRef.playMonsterAnim)
+            {
+
+                gameRef.numf += (float)gameTime.ElapsedGameTime.TotalSeconds * speed * 35;
+
+                Rectangle rec;
+                if (gameRef.playPlayerAnim)
                 {
-                    gameRef.playAnim = false;
+                    rec = new Rectangle(500, 40, 150, 150);
+                }
+                else
+                {
+                    rec = new Rectangle(50, 200, 150, 150);
+                }
+
+                gameRef._spriteBatch.Draw(
+                gameRef.animController.currentAnimation.sprite,
+                rec,
+                gameRef.animController.currentAnimation.ListaRetangulos[gameRef.animController.currentAnimation.FrameAtual],
+                Color.White);
+
+
+
+                if (gameRef.numf > 250.0f)
+                {
+                    Console.WriteLine("Reseting gameRef.numf " + gameRef.numf);
+                    gameRef.playPlayerAnim = false;
+                    gameRef.playMonsterAnim = false;
                     gameRef.numf = 0.0f;
                     gameRef.animationIsPlaying = false;
                 }
             }
+
+            if (gameRef.numf > 0)
+                Console.WriteLine(gameRef.numf);
 
             //############################################################################
 
@@ -183,13 +195,10 @@ namespace Battle_Engine
         {
             st = "Let's fight!!";
             NextLineMethod(st);
-            dialogueText = "Let's fight!!";
         }
 
         public void ShowChoiceMenu()
         {
-            //dialogueText = "Checking action!";
-
             StateManager stateManager = (StateManager)gameRef.Services.GetService(typeof(IStateManager));
             stateManager.PushState(gameRef.ChoiceState);
             
@@ -200,8 +209,22 @@ namespace Battle_Engine
 
         public void PlayerAnimation()
         {
-            gameRef.playAnim = true;
+            gameRef.playPlayerAnim = true;
             gameRef.animationIsPlaying = true;
+            listIndex += 1;
+            actionManager.InvokeAction(listIndex);
+            gameRef.animController.SetAnimation(AnimationKey.Explosion);
+            gameRef.animController.PlayAnimation(AnimationKey.Explosion);
+        }
+
+        public void MonsterAnimation()
+        {
+            gameRef.playMonsterAnim = true;
+            gameRef.animationIsPlaying = true;
+
+            gameRef.animController.SetAnimation(AnimationKey.Explosion);
+            gameRef.animController.PlayAnimation(AnimationKey.Explosion);
+
             listIndex += 1;
             actionManager.InvokeAction(listIndex);
         }
@@ -216,9 +239,9 @@ namespace Battle_Engine
         {
             if (gameRef.genericMonster.health > 0)
             {
-                st = "Monster prepares to attack";
+                st = "Monster prepares to attack.";
                 NextLineMethod(st);
-                //dialogueText = "Monster prepares to attack";
+
             }
             else
             {
@@ -233,11 +256,7 @@ namespace Battle_Engine
         {
             st = "Monster attack you causing " + gameRef.genericMonster.power + " damage points.";
             NextLineMethod(st);
-            //sentenceSize = st.Length;
-
             gameRef.mainPlayer.health -= gameRef.genericMonster.power;
-
-            //dialogueText = "Monster attack you causing " + GameRef.genericMonster.power + " damage points.";
         }
 
         public void CheckPlayerHealth()
@@ -246,14 +265,12 @@ namespace Battle_Engine
             {
                 st = "You died. Enemy won.";
                 NextLineMethod(st);
-                //dialogueText = "You died. Enemy won.";
                 PlayerAlive = false;
             }
             else
             {
                 st = "You have " + gameRef.mainPlayer.health.ToString() + " health points.";
                 NextLineMethod(st);
-                //dialogueText = "You have " + GameRef.mainPlayer.health.ToString() + " health points.";
             }
         }
 
@@ -264,13 +281,12 @@ namespace Battle_Engine
             index = 0;
             baseText = "";
 
-                ch = new char[text.Length];
+            ch = new char[text.Length];
 
-                for (int i = 0; i < text.Length; i++)
-                {
-                    ch[i] = text[i];
-                }
-            
+            for (int i = 0; i < text.Length; i++)
+            {
+                ch[i] = text[i];
+            }
         }
     }
 }

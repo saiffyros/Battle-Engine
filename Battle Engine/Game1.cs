@@ -38,8 +38,9 @@ namespace Battle_Engine
         public GamePlayState gamePlayState { get; private set; }
         public Texture2D explosionTex;
         public Animation explosion;
-        //public AnimationController animController;
-        public bool playAnim = false;
+        public AnimationController animController;
+        public bool playPlayerAnim = false;
+        public bool playMonsterAnim = false;
         public float numf = 0;
         public bool animationIsPlaying = false;
         public Animation currentAnimation;
@@ -66,11 +67,11 @@ namespace Battle_Engine
             playerTex = Content.Load<Texture2D>("playerTex");
             monsterTex = Content.Load<Texture2D>("monsterTex");
 
-            //animController = new AnimationController(this);
+            animController = new AnimationController(this);
             //Components.Add(animController);
             explosionTex = Content.Load<Texture2D>("explosion");
-            explosion = new Animation(explosionTex, 192, 192, 50, false, new Rectangle(250,200,150,150), true);
-            //animController.AddAnimation(AnimationKey.Explosion, explosion);
+            explosion = new Animation(explosionTex, 192, 192, 50, false);
+            animController.AddAnimation(AnimationKey.Explosion, explosion);
 
             base.Initialize();
         }
@@ -86,7 +87,7 @@ namespace Battle_Engine
 
         public void WaitMethod()
         {
-            gamePlayState.st = "You skipped your turn";
+            gamePlayState.st = "You skipped your turn.";
             gamePlayState.NextLineMethod(gamePlayState.st);
             //gamePlayState.dialogueText = "You skipped your turn";
         }
@@ -116,6 +117,8 @@ namespace Battle_Engine
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            animController.Update(gameTime);
 
             base.Update(gameTime);
         }

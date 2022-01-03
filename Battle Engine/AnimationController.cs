@@ -7,13 +7,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Battle_Engine
 {
-    public class AnimationController : DrawableGameComponent
+    public class AnimationController// : DrawableGameComponent
     {
         Game1 gameRef;
         public Animation currentAnimation;
         public Dictionary<AnimationKey, Animation> ListaAnimations = new Dictionary<AnimationKey, Animation>();
 
-        public AnimationController(Game game) : base(game)
+        public AnimationController(Game game)// : base(game)
         {
             gameRef = (Game1)game;
         }
@@ -25,6 +25,7 @@ namespace Battle_Engine
 
         public void PlayAnimation(AnimationKey name)
         {
+            ListaAnimations[name].FrameAtual = 0;
             ListaAnimations[name].Ativa = true;
         }
 
@@ -75,7 +76,7 @@ namespace Battle_Engine
             }
         }
 
-        public override void Update(GameTime gameTime)
+        public  void Update(GameTime gameTime)
         {
 
             foreach (KeyValuePair<AnimationKey, Animation> animValues in ListaAnimations)
@@ -86,10 +87,9 @@ namespace Battle_Engine
                 }
             }
 
-            base.Update(gameTime);
         }
 
-        public override void Draw(GameTime gameTime)
+        public void Draw(GameTime gameTime)
         {
             gameRef._spriteBatch.Begin();
 
@@ -103,7 +103,6 @@ namespace Battle_Engine
 
             gameRef._spriteBatch.End();
 
-            base.Draw(gameTime);
         }
     }
 }

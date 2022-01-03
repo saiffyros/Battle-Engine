@@ -32,7 +32,7 @@ namespace Battle_Engine
             Duration = duration;
             Cronometro = 0;
             FrameAtual = 0;
-            Ativa = true;
+            Ativa = false;
             ListaRetangulos = new List<Rectangle>();
 
             Colunas = texture.Width / largura;
@@ -58,7 +58,7 @@ namespace Battle_Engine
             Duration = duration;
             Cronometro = 0;
             FrameAtual = 0;
-            Ativa = true;
+            Ativa = false;
             ListaRetangulos = new List<Rectangle>();
             Position = position;
             Drawing = drawing;
@@ -88,7 +88,7 @@ namespace Battle_Engine
             Duration = dur;
             Cronometro = 0;
             FrameAtual = 0;
-            Ativa = true;
+            Ativa = false;
             ListaRetangulos = new List<Rectangle>();
 
             Colunas = texture.Width / lar;

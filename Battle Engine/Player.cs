@@ -9,9 +9,10 @@ namespace Battle_Engine
     {
         public string weapon { get; set; }
         public int xp { get; set; }
+
         public List<Maneuver> listManeuvers = new List<Maneuver>();
 
-        public Player(string _name, int _health, int _power, string _weapon, int _xp, int _luck)
+        public Player(string _name, int _health, int _power, string _weapon, int _xp, int _luck, int _maxHealth)
         {
             name = _name;
             health = _health;
@@ -19,6 +20,7 @@ namespace Battle_Engine
             weapon = _weapon;
             xp = _xp;
             luck = _luck;
+            maxHealth = _maxHealth;
         }
 
         public Player()

@@ -10,7 +10,7 @@ namespace Battle_Engine
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        public SpriteBatch _spriteBatch;
 
         public static SpriteFont font;
 
@@ -36,6 +36,14 @@ namespace Battle_Engine
         public InputSystem inputSystem;
         public PlayerChoiceScreen ChoiceState { get; private set; }
         public GamePlayState gamePlayState { get; private set; }
+        public Texture2D explosionTex;
+        public Animation explosion;
+        //public AnimationController animController;
+        public bool playAnim = false;
+        public float numf = 0;
+        public bool animationIsPlaying = false;
+        public Animation currentAnimation;
+        public Texture2D playerTex, monsterTex;
 
         public Game1()
         {
@@ -55,6 +63,14 @@ namespace Battle_Engine
         {
             dialogueBox = new Texture2D(GraphicsDevice, 10, 10);
             previousKeyboardState = Keyboard.GetState();
+            playerTex = Content.Load<Texture2D>("playerTex");
+            monsterTex = Content.Load<Texture2D>("monsterTex");
+
+            //animController = new AnimationController(this);
+            //Components.Add(animController);
+            explosionTex = Content.Load<Texture2D>("explosion");
+            explosion = new Animation(explosionTex, 192, 192, 50, false, new Rectangle(250,200,150,150), true);
+            //animController.AddAnimation(AnimationKey.Explosion, explosion);
 
             base.Initialize();
         }
@@ -62,25 +78,32 @@ namespace Battle_Engine
         public void AttackMethod()
         {
             GenericMonster.health -= MainPlayer.power;
-            gamePlayState.dialogueText = "You attack the enemy with " + MainPlayer.weapon + " causing " + MainPlayer.power + " damage points.";
+            gamePlayState.st = "You attack the enemy with " + MainPlayer.weapon + " causing " + MainPlayer.power + " damage points.";
+            gamePlayState.NextLineMethod(gamePlayState.st);
+            //gamePlayState.dialogueText = "You attack the enemy with " + MainPlayer.weapon + " causing " + MainPlayer.power + " damage points.";
+
         }
 
         public void WaitMethod()
         {
-            gamePlayState.dialogueText = "You skipped your turn";
+            gamePlayState.st = "You skipped your turn";
+            gamePlayState.NextLineMethod(gamePlayState.st);
+            //gamePlayState.dialogueText = "You skipped your turn";
         }
 
         protected override void LoadContent()
         {
-            Attack = new Maneuver("Attack", "A simple attack", 50, AttackMethod);
-            Wait = new Maneuver("Wait", "Skipping the turn", 0, WaitMethod);
+            Attack = new Maneuver("Attack", "A simple attack", 50, AttackMethod, explosion);
+            Wait = new Maneuver("Wait", "Skipping the turn", 0, WaitMethod, explosion);
 
-            MainPlayer = new Player("Player", 100, 50, "fist", 20, 2);
+            MainPlayer = new Player("Player", 100, 50, "fist", 20, 2, 100);
+
+            
 
             MainPlayer.listManeuvers.Add(Attack);
             MainPlayer.listManeuvers.Add(Wait);
 
-            GenericMonster = new Monster("Monster", 150, 30, 2);
+            GenericMonster = new Monster("Monster", 150, 30, 2, 150);
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("font");
@@ -101,14 +124,16 @@ namespace Battle_Engine
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin();
+            //_spriteBatch.Begin();
 
-            foreach (string text in _messages)
-            {
-                _spriteBatch.DrawString(font, text, new Vector2(50, 200), Color.White);
-            }
+            //foreach (string text in _messages)
+            //{
+            //    _spriteBatch.DrawString(font, text, new Vector2(50, 200), Color.White);
+            //}
 
-            _spriteBatch.End();
+          
+
+            //_spriteBatch.End();
 
             base.Draw(gameTime);
         }

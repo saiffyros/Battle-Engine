@@ -13,6 +13,7 @@ namespace Battle_Engine
         private SpriteFont font;
         private Maneuver SelectedManeuver;
         private Texture2D buttonTexture;
+        Texture2D _pixel;
 
         public Maneuver selectedManeuver { get { return SelectedManeuver; } }
 
@@ -23,23 +24,26 @@ namespace Battle_Engine
 
         public override void Initialize()
         {
-
+            _pixel = new Texture2D(GraphicsDevice, 1, 1);
+            Color[] data = new Color[1];
+            data[0] = Color.White;
+            _pixel.SetData(data);
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            font = GameRef.Content.Load<SpriteFont>("font");
-            buttonTexture = GameRef.Content.Load<Texture2D>("Button");
+            font = gameRef.Content.Load<SpriteFont>("font");
+            buttonTexture = gameRef.Content.Load<Texture2D>("Button");
 
-            var label = new Label(GameRef, "Choose an action!", font, new Vector2(300, 5));
+            var label = new Label(gameRef, "Choose an action!", font, new Vector2(300, 5));
             LocalComponents.Add(label);
 
-            foreach (Maneuver maneuver in GameRef.mainPlayer.listManeuvers)
+            foreach (Maneuver maneuver in gameRef.mainPlayer.listManeuvers)
             {
-                var AttackBtn = new Button(GameRef, buttonTexture, font)
+                var AttackBtn = new Button(gameRef, buttonTexture, font)
                 {
-                    Position = new Vector2((GameRef.mainPlayer.listManeuvers.IndexOf(maneuver) + 1) * 150, 200),
+                    Position = new Vector2((gameRef.mainPlayer.listManeuvers.IndexOf(maneuver) + 1) * 150, 200),
                     Text = maneuver.Name,
                 };
 
@@ -61,7 +65,8 @@ namespace Battle_Engine
             //    }
             //}
 
-            GameRef.stateManager.ChangeState(GameRef.gamePlayState);
+            gameRef.currentAnimation = selectedManeuver.ManeuverAnimation;
+            gameRef.stateManager.ChangeState(gameRef.gamePlayState);
             GamePlayState.listIndex += 1;
             Console.WriteLine("From choice " + GamePlayState.listIndex);
             GamePlayState.actionManager.InvokeAction(GamePlayState.listIndex);
@@ -80,21 +85,28 @@ namespace Battle_Engine
 
         public override void Draw(GameTime gameTime)
         {
-            GameRef.GraphicsDevice.Clear(Color.CadetBlue);
-            GameRef.SpriteBatch.Begin();
+            gameRef.GraphicsDevice.Clear(Color.CadetBlue);
+            gameRef.SpriteBatch.Begin();
 
-            GameRef.SpriteBatch.DrawString(font, GameRef.mainPlayer.name, new Vector2(50, 50), Color.Black);
-            GameRef.SpriteBatch.DrawString(font, GameRef.mainPlayer.health.ToString(), new Vector2(50, 70), Color.Black);
+            gameRef.SpriteBatch.DrawString(font, gameRef.mainPlayer.name, new Vector2(50, 50), Color.Black);
+            gameRef.SpriteBatch.DrawString(font, gameRef.mainPlayer.health.ToString(), new Vector2(50, 70), Color.Black);
+            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(50, 90, 120, 5), Color.LightGray); ;
+            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(50, 90, (int)(((float)gameRef.mainPlayer.health / (float)gameRef.mainPlayer.maxHealth) * 120.0f), 5), Color.Green);
 
-            GameRef.SpriteBatch.DrawString(font, GameRef.genericMonster.name, new Vector2(680, 50), Color.Black);
-            GameRef.SpriteBatch.DrawString(font, GameRef.genericMonster.health.ToString(), new Vector2(680, 70), Color.Black);
+            gameRef.SpriteBatch.Draw(gameRef.playerTex, new Vector2(15, 150), Color.White);
+            gameRef.SpriteBatch.Draw(gameRef.monsterTex, new Vector2(540, 15), Color.White);
+
+            gameRef.SpriteBatch.DrawString(font, gameRef.genericMonster.name, new Vector2(620, 50), Color.Black);
+            gameRef.SpriteBatch.DrawString(font, gameRef.genericMonster.health.ToString(), new Vector2(620, 70), Color.Black);
+            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(620, 90, 120, 5), Color.LightGray);
+            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(620, 90, (int)(((float)gameRef.genericMonster.health / (float)gameRef.genericMonster.maxHealth) * 120.0f), 5), Color.Green);
 
             //foreach (var component in _gameComponents)
             //{
             //    component.Draw(gameTime, GameRef.SpriteBatch);
             //}
 
-            GameRef.SpriteBatch.End();
+            gameRef.SpriteBatch.End();
 
             base.Draw(gameTime);
         }

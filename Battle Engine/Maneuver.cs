@@ -12,12 +12,15 @@ namespace Battle_Engine
 
         public Action ManeuverAction { get; set; }
 
-        public Maneuver(string _name, string _description, int _damage, Action _maneuver)
+        public Animation ManeuverAnimation { get; set; }
+
+        public Maneuver(string _name, string _description, int _damage, Action _maneuver, Animation _animation)
         {
             Name = _name;
             Description = _description;
             Damage = _damage;
             ManeuverAction = _maneuver;
+            ManeuverAnimation = _animation;
         }
 
         public Action ManeuverActionMethod()

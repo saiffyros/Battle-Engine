@@ -12,7 +12,7 @@ namespace Battle_Engine
         protected readonly IStateManager _manager;
         protected ContentManager _content;
         protected readonly List<GameComponent> _childComponents;
-        protected Game1 GameRef;
+        protected Game1 gameRef;
 
         public List<GameComponent> LocalComponents
         {
@@ -27,7 +27,7 @@ namespace Battle_Engine
         public GameState(Game game) : base(game)
         {
             _tag = this;
-            GameRef = (Game1)game;
+            gameRef = (Game1)game;
             _childComponents = new List<GameComponent>();
             _content = Game.Content;
             _manager = (IStateManager)Game.Services.GetService(typeof(IStateManager));

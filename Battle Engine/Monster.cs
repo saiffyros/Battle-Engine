@@ -13,13 +13,15 @@ namespace Battle_Engine
         public int health { get; set; }
         public int power { get; set; }
         public int luck { get; set; }
+        public int maxHealth { get; set; }
 
-        public Monster(string a, int b, int c, int f)
+        public Monster(string a, int b, int c, int f, int _maxHealth)
         {
             name = a;
             health = b;
             power = c;
             luck = f;
+            maxHealth = _maxHealth;
         }
 
         public Monster()

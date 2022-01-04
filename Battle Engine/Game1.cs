@@ -62,6 +62,10 @@ namespace Battle_Engine
 
         protected override void Initialize()
         {
+            _graphics.PreferredBackBufferWidth = 450;
+            _graphics.PreferredBackBufferHeight = 680;
+            _graphics.ApplyChanges();
+
             dialogueBox = new Texture2D(GraphicsDevice, 10, 10);
             previousKeyboardState = Keyboard.GetState();
             playerTex = Content.Load<Texture2D>("playerTex");
@@ -79,36 +83,35 @@ namespace Battle_Engine
         public void AttackMethod()
         {
             GenericMonster.health -= MainPlayer.power;
-            gamePlayState.st = "You attack the enemy with " + MainPlayer.weapon + " causing " + MainPlayer.power + " damage points.";
+            gamePlayState.st = "Você ataca o oponente com " + MainPlayer.weapon + " causando \n" + MainPlayer.power + " pontos de dano.";
             gamePlayState.NextLineMethod(gamePlayState.st);
-            //gamePlayState.dialogueText = "You attack the enemy with " + MainPlayer.weapon + " causing " + MainPlayer.power + " damage points.";
 
         }
 
         public void WaitMethod()
         {
-            gamePlayState.st = "You skipped your turn.";
+            gamePlayState.st = "Você pula o seu turno.";
             gamePlayState.NextLineMethod(gamePlayState.st);
             //gamePlayState.dialogueText = "You skipped your turn";
         }
 
         protected override void LoadContent()
         {
-            Attack = new Maneuver("Attack", "A simple attack", 50, AttackMethod, explosion);
-            Wait = new Maneuver("Wait", "Skipping the turn", 0, WaitMethod, explosion);
+            Attack = new Maneuver("Atacar", "A simple attack", 50, AttackMethod, explosion);
+            Wait = new Maneuver("Esperar", "Skipping the turn", 0, WaitMethod, explosion);
 
-            MainPlayer = new Player("Player", 100, 50, "fist", 20, 2, 100);
+            MainPlayer = new Player("Hillary", 100, 50, "tapa", 20, 2, 100);
 
             
 
             MainPlayer.listManeuvers.Add(Attack);
             MainPlayer.listManeuvers.Add(Wait);
 
-            GenericMonster = new Monster("Monster", 150, 30, 2, 150);
+            GenericMonster = new Monster("Trump", 150, 30, 2, 150);
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("font");
-            dialogueBox = Content.Load<Texture2D>("dialogueBox");
+            dialogueBox = Content.Load<Texture2D>("dialogueBar");
             Components.Add(inputSystem);
         }
 

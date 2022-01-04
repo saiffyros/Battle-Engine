@@ -10,7 +10,7 @@ namespace Battle_Engine
 {
     public class PlayerChoiceScreen : GameState
     {
-        private SpriteFont font;
+        private SpriteFont font, titleFont;
         private Maneuver SelectedManeuver;
         private Texture2D buttonTexture;
         Texture2D _pixel;
@@ -34,9 +34,10 @@ namespace Battle_Engine
         protected override void LoadContent()
         {
             font = gameRef.Content.Load<SpriteFont>("font");
+            titleFont = gameRef.Content.Load<SpriteFont>("titleFont");
             buttonTexture = gameRef.Content.Load<Texture2D>("Button");
 
-            var label = new Label(gameRef, "Choose an action!", font, new Vector2(300, 5));
+            var label = new Label(gameRef, "Escolha uma ação!", titleFont, new Vector2(300, 5));
             LocalComponents.Add(label);
 
             foreach (Maneuver maneuver in gameRef.mainPlayer.listManeuvers)
@@ -88,25 +89,25 @@ namespace Battle_Engine
             gameRef.GraphicsDevice.Clear(Color.CadetBlue);
             gameRef.SpriteBatch.Begin();
 
-            gameRef.SpriteBatch.DrawString(font, gameRef.mainPlayer.name, new Vector2(50, 50), Color.Black);
-            gameRef.SpriteBatch.DrawString(font, gameRef.mainPlayer.health.ToString(), new Vector2(50, 70), Color.Black);
-            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(50, 90, 120, 5), Color.LightGray); ;
-            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(50, 90, (int)(((float)gameRef.mainPlayer.health / (float)gameRef.mainPlayer.maxHealth) * 120.0f), 5), Color.Green);
+            gameRef.SpriteBatch.DrawString(font, gameRef.mainPlayer.name, new Vector2(280, 200), Color.Black);
+            gameRef.SpriteBatch.DrawString(font, gameRef.mainPlayer.health.ToString(), new Vector2(280, 220), Color.Black);
+            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(280, 240, 120, 5), Color.LightGray);
+            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(280, 240, (int)(((float)gameRef.mainPlayer.health / (float)gameRef.mainPlayer.maxHealth) * 120.0f), 5), Color.Green);
+
+            gameRef.SpriteBatch.DrawString(font, gameRef.genericMonster.name, new Vector2(80, 50), Color.Black);
+            gameRef.SpriteBatch.DrawString(font, gameRef.genericMonster.health.ToString(), new Vector2(80, 70), Color.Black);
 
             gameRef.SpriteBatch.Draw(gameRef.playerTex, new Vector2(15, 150), Color.White);
-            gameRef.SpriteBatch.Draw(gameRef.monsterTex, new Vector2(540, 15), Color.White);
+            gameRef.SpriteBatch.Draw(gameRef.monsterTex, new Vector2(340, 15), Color.White);
+            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(80, 90, 120, 5), Color.LightGray);
+            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(80, 90, (int)(((float)gameRef.genericMonster.health / (float)gameRef.genericMonster.maxHealth) * 120.0f), 5), Color.Green);
 
-            gameRef.SpriteBatch.DrawString(font, gameRef.genericMonster.name, new Vector2(620, 50), Color.Black);
-            gameRef.SpriteBatch.DrawString(font, gameRef.genericMonster.health.ToString(), new Vector2(620, 70), Color.Black);
-            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(620, 90, 120, 5), Color.LightGray);
-            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(620, 90, (int)(((float)gameRef.genericMonster.health / (float)gameRef.genericMonster.maxHealth) * 120.0f), 5), Color.Green);
+                //foreach (var component in _gameComponents)
+                //{
+                //    component.Draw(gameTime, GameRef.SpriteBatch);
+                //}
 
-            //foreach (var component in _gameComponents)
-            //{
-            //    component.Draw(gameTime, GameRef.SpriteBatch);
-            //}
-
-            gameRef.SpriteBatch.End();
+                gameRef.SpriteBatch.End();
 
             base.Draw(gameTime);
         }

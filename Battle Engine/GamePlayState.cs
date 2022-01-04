@@ -14,7 +14,7 @@ namespace Battle_Engine
         public static ActionManager actionManager;
         private bool PlayerAlive = true;
         private bool MonsterAlive = true;
-        private SpriteFont font;
+        private SpriteFont font, titleFont;
         private Rectangle windowArea = new Rectangle(0, 0, 800, 600);
         private Rectangle mouseRectangle = new Rectangle(0, 0, 1, 1);
         MouseState previousMouseState;
@@ -41,6 +41,7 @@ namespace Battle_Engine
             
             actionManager = new ActionManager();
             font = gameRef.Content.Load<SpriteFont>("font");
+            titleFont = gameRef.Content.Load<SpriteFont>("titleFont");
             _pixel = new Texture2D(GraphicsDevice, 1, 1);
             Color[] data = new Color[1];
             data[0] = Color.White;
@@ -55,7 +56,7 @@ namespace Battle_Engine
             actionManager.SetAction(() => MonsterAttack());
             actionManager.SetAction(() => CheckPlayerHealth());
 
-            st = "Let's fight";
+            st = "Que comece a batalha!";
             NextLineMethod(st);
         }
 
@@ -88,7 +89,7 @@ namespace Battle_Engine
                     }
                     else
                     {
-                        st = "Game is over.";
+                        st = "Fim do jogo.";
                         NextLineMethod(st);
                         //dialogueText = "Game is over";
                         gameRef.Exit();
@@ -121,25 +122,24 @@ namespace Battle_Engine
 
             gameRef.SpriteBatch.Begin();
 
-            gameRef.SpriteBatch.DrawString(font, gameRef.mainPlayer.name, new Vector2(50, 50), Color.Black);
-            gameRef.SpriteBatch.DrawString(font, gameRef.mainPlayer.health.ToString(), new Vector2(50, 70), Color.Black);
-            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(50, 90, 120, 5), Color.LightGray);
-            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(50, 90, (int)(((float)gameRef.mainPlayer.health / (float)gameRef.mainPlayer.maxHealth) * 120.0f), 5), Color.Green);
+            gameRef.SpriteBatch.DrawString(font, gameRef.mainPlayer.name, new Vector2(280, 200), Color.Black);
+            gameRef.SpriteBatch.DrawString(font, gameRef.mainPlayer.health.ToString(), new Vector2(280, 220), Color.Black);
+            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(280, 240, 120, 5), Color.LightGray);
+            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(280, 240, (int)(((float)gameRef.mainPlayer.health / (float)gameRef.mainPlayer.maxHealth) * 120.0f), 5), Color.Green);
+
+            gameRef.SpriteBatch.DrawString(font, gameRef.genericMonster.name, new Vector2(80, 50), Color.Black);
+            gameRef.SpriteBatch.DrawString(font, gameRef.genericMonster.health.ToString(), new Vector2(80, 70), Color.Black);
 
             gameRef.SpriteBatch.Draw(gameRef.playerTex, new Vector2(15, 150), Color.White);
-            gameRef.SpriteBatch.Draw(gameRef.monsterTex, new Vector2(540, 15), Color.White);
-
-            gameRef.SpriteBatch.DrawString(font, gameRef.genericMonster.name, new Vector2(620, 50), Color.Black);
-            gameRef.SpriteBatch.DrawString(font, gameRef.genericMonster.health.ToString(), new Vector2(620, 70), Color.Black);
-            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(620, 90, 120, 5), Color.LightGray);
-            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(620, 90, (int)(((float)gameRef.genericMonster.health / (float)gameRef.genericMonster.maxHealth) * 120.0f), 5), Color.Green);
-
+            gameRef.SpriteBatch.Draw(gameRef.monsterTex, new Vector2(340, 15), Color.White);
+            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(80, 90, 120, 5), Color.LightGray);
+            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(80, 90, (int)(((float)gameRef.genericMonster.health / (float)gameRef.genericMonster.maxHealth) * 120.0f), 5), Color.Green);
 
 
             if (gameRef.animationIsPlaying == false)
             {
-                gameRef.SpriteBatch.Draw(Game1.dialogueBox, new Vector2(0, 300), Color.White);
-                gameRef.SpriteBatch.DrawString(font, baseText, new Vector2(200, 400), Color.White);
+                gameRef.SpriteBatch.Draw(Game1.dialogueBox, new Vector2(15, 260), Color.White);
+                gameRef.SpriteBatch.DrawString(font, baseText, new Vector2(50, 290), Color.Black);
 
                 //GameRef.SpriteBatch.DrawString(font, dialogueText, new Vector2(200, 400), Color.White);
             }
@@ -156,11 +156,11 @@ namespace Battle_Engine
                 Rectangle rec;
                 if (gameRef.playPlayerAnim)
                 {
-                    rec = new Rectangle(500, 40, 150, 150);
+                    rec = new Rectangle(300, 40, 150, 150);
                 }
                 else
                 {
-                    rec = new Rectangle(50, 200, 150, 150);
+                    rec = new Rectangle(20, 200, 150, 150);
                 }
 
                 gameRef._spriteBatch.Draw(
@@ -193,7 +193,7 @@ namespace Battle_Engine
 
         public void InitialText()
         {
-            st = "Let's fight!!";
+            st = "Que comece a batalha!";
             NextLineMethod(st);
         }
 
@@ -239,13 +239,13 @@ namespace Battle_Engine
         {
             if (gameRef.genericMonster.health > 0)
             {
-                st = "Monster prepares to attack.";
+                st = "O oponente se prepara para atacar.";
                 NextLineMethod(st);
 
             }
             else
             {
-                st = "Monster died.";
+                st = "O oponente desmaiou.";
                 NextLineMethod(st);
                 //dialogueText = "Monster died.";
                 MonsterAlive = false;
@@ -254,7 +254,7 @@ namespace Battle_Engine
 
         public void MonsterAttack()
         {
-            st = "Monster attack you causing " + gameRef.genericMonster.power + " damage points.";
+            st = "Oponente te ataca causando " + gameRef.genericMonster.power + " pontos de dano.";
             NextLineMethod(st);
             gameRef.mainPlayer.health -= gameRef.genericMonster.power;
         }
@@ -263,13 +263,13 @@ namespace Battle_Engine
         {
             if (gameRef.mainPlayer.health < 1)
             {
-                st = "You died. Enemy won.";
+                st = "Seu Polimon desmaiou, o oponente venceu.";
                 NextLineMethod(st);
                 PlayerAlive = false;
             }
             else
             {
-                st = "You have " + gameRef.mainPlayer.health.ToString() + " health points.";
+                st = "Você tem " + gameRef.mainPlayer.health.ToString() + " pontos de vida.";
                 NextLineMethod(st);
             }
         }

@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Battle_Engine
 {
-    public class Button : DrawableGameComponent
+    public class Button
     {
         Game1 gameRef;
         private MouseState _currentMouse;
@@ -22,34 +22,49 @@ namespace Battle_Engine
         public bool Clicked { get; private set; }
         public Color PenColour { get; set; }
         public Vector2 Position { get; set; }
-        public Rectangle Rectangle
-        {
-            get
-            {
-                return new Rectangle((int)Position.X, (int)Position.Y, _texture.Width, _texture.Height);
-            }
-        }
+        public Rectangle Rectangle;
+        //public bool _inWorld = false;
 
         public string Text { get; set; }
 
-        public Button(Game game, Texture2D texture, SpriteFont font) : base(game)
+        public bool _active = true;
+
+        public Button(Game game, string buttonText, Vector2 position)
         {
             this.gameRef = (Game1)game;
-            _texture = texture;
-            _font = font;
             PenColour = Color.Black;
+            //_font = gameRef.font;
+            _font = gameRef.Content.Load<SpriteFont>("font");
+            _texture = gameRef.Content.Load<Texture2D>("Button");
+            Text = buttonText;
+            Position = position;
+            Rectangle = new Rectangle((int)Position.X, (int)Position.Y, (int)_font.MeasureString(Text).X + 15, (int)_font.MeasureString(Text).Y + 6);
         }
 
-        public override void Update(GameTime gameTime)
+        public Button(Game game, string buttonText, Vector2 position, string texture)
+        {
+            this.gameRef = (Game1)game;
+            PenColour = Color.White;
+            //_font = gameRef.font;
+            _font = gameRef.Content.Load<SpriteFont>("font");
+            _texture = gameRef.Content.Load<Texture2D>(texture);
+            Text = buttonText;
+            Position = position;
+            Rectangle = new Rectangle((int)Position.X, (int)Position.Y, _texture.Width, _texture.Height);
+        }
+
+        public void Update(GameTime gameTime)
         {
             _previousMouse = _currentMouse;
             _currentMouse = Mouse.GetState();
 
-            var mouseRectangle = new Rectangle(_currentMouse.X, _currentMouse.Y, 1, 1);
+            Rectangle mouseRectangle;
+
+                mouseRectangle = new Rectangle(_currentMouse.X, _currentMouse.Y, 1, 1);
 
             _isHovering = false;
 
-            if (mouseRectangle.Intersects(Rectangle))
+            if (mouseRectangle.Intersects(Rectangle) && _active == true)
             {
                 _isHovering = true;
 
@@ -61,29 +76,31 @@ namespace Battle_Engine
             }
         }
 
-        public override void Draw(GameTime gameTime)
+        public void Draw(GameTime gameTime, Matrix? transform)
         {
             var colour = Color.White;
 
             if (_isHovering)
                 colour = Color.Gray;
 
-            gameRef.SpriteBatch.Begin();
-            gameRef.SpriteBatch.Draw(_texture, Rectangle, colour);
-            gameRef.SpriteBatch.End();
-
-            if (!string.IsNullOrEmpty(Text))
+            if (_active == true)
             {
-                var x = (Rectangle.X + (Rectangle.Width / 2)) - (_font.MeasureString(Text).X / 2);
-                var y = (Rectangle.Y + (Rectangle.Height / 2)) - (_font.MeasureString(Text).Y / 2);
 
-                gameRef.SpriteBatch.Begin();
-                gameRef.SpriteBatch.DrawString(_font, Text, new Vector2(x, y), PenColour);
-                gameRef.SpriteBatch.End();
+                gameRef._spriteBatch.Begin(transformMatrix: transform);
+                gameRef._spriteBatch.Draw(_texture, Rectangle, colour);
+                gameRef._spriteBatch.End();
+
+                if (!string.IsNullOrEmpty(Text))
+                {
+                    var x = (Rectangle.X + (Rectangle.Width / 2)) - (_font.MeasureString(Text).X / 2);
+                    var y = (Rectangle.Y + (Rectangle.Height / 2)) - (_font.MeasureString(Text).Y / 2);
+
+                    gameRef._spriteBatch.Begin(transformMatrix: transform);
+                    gameRef._spriteBatch.DrawString(_font, Text, new Vector2(x, y), PenColour);
+                    gameRef._spriteBatch.End();
+                }
             }
         }
-
-
     }
 }
 

@@ -14,6 +14,7 @@ namespace Battle_Engine
         private Maneuver SelectedManeuver;
         private Texture2D buttonTexture;
         Texture2D _pixel;
+        private List<Button> buttonList = new List<Button>();
 
         public Maneuver selectedManeuver { get { return SelectedManeuver; } }
 
@@ -37,26 +38,44 @@ namespace Battle_Engine
             titleFont = gameRef.Content.Load<SpriteFont>("titleFont");
             buttonTexture = gameRef.Content.Load<Texture2D>("Button");
 
-            var label = new Label(gameRef, "Escolha uma ação!", titleFont, new Vector2(300, 5));
+            var label = new Label(gameRef, "Escolha uma ação!", titleFont, new Vector2(150, 5));
             LocalComponents.Add(label);
 
             foreach (Maneuver maneuver in gameRef.mainPlayer.listManeuvers)
             {
-                var AttackBtn = new Button(gameRef, buttonTexture, font)
+                Vector2 posBtn;
+                if (gameRef.mainPlayer.listManeuvers.IndexOf(maneuver) == 0)
                 {
-                    Position = new Vector2((gameRef.mainPlayer.listManeuvers.IndexOf(maneuver) + 1) * 150, 200),
-                    Text = maneuver.Name,
-                };
+                    posBtn = new Vector2(50, 400);
+                }
+                else if (gameRef.mainPlayer.listManeuvers.IndexOf(maneuver) == 1)
+                {
+                    posBtn = new Vector2(250, 400);
+                }
+                else if (gameRef.mainPlayer.listManeuvers.IndexOf(maneuver) == 2)
+                {
+                    posBtn = new Vector2(50, 480);
+                }
+                else
+                {
+                    posBtn = new Vector2(250, 480);
+                }
 
-                AttackBtn.Click += delegate { SelectedManeuver = maneuver; BackToPlayState(AttackBtn); };
+                Button AttackBtn = new Button(gameRef, maneuver.Name, posBtn, "buttonTexture");
 
-                LocalComponents.Add(AttackBtn); // GameState.LocalComponents, not Game.Components
+                AttackBtn.Click += delegate { SelectedManeuver = maneuver; BackToPlayState(); };
+                buttonList.Add(AttackBtn);
             }
+
+            Button cancelBtn = new Button(gameRef, "Voltar", new Vector2(50, 600), "cancelBtn");
+            //MUDAR!!!!!!!!!!!!!
+            cancelBtn.Click += delegate { SelectedManeuver = gameRef.mainPlayer.listManeuvers[1]; BackToPlayState(); }; 
+            buttonList.Add(cancelBtn);
 
             base.LoadContent();
         }
 
-        public void BackToPlayState(Button button) //can be improved. A callback maybe?
+        public void BackToPlayState() //can be improved. A callback maybe?
         {
             //foreach (Maneuver maneuver in GameRef.mainPlayer.listManeuvers)
             //{
@@ -76,10 +95,10 @@ namespace Battle_Engine
 
         public override void Update(GameTime gameTime)
         {
-            //foreach (var component in _gameComponents)
-            //{
-            //    component.Update(gameTime);
-            //}
+            foreach(Button button in buttonList)
+            {
+                button.Update(gameTime);
+            }
 
             base.Update(gameTime);
         }
@@ -89,25 +108,35 @@ namespace Battle_Engine
             gameRef.GraphicsDevice.Clear(Color.CadetBlue);
             gameRef.SpriteBatch.Begin();
 
-            gameRef.SpriteBatch.DrawString(font, gameRef.mainPlayer.name, new Vector2(280, 200), Color.Black);
-            gameRef.SpriteBatch.DrawString(font, gameRef.mainPlayer.health.ToString(), new Vector2(280, 220), Color.Black);
+            gameRef.SpriteBatch.DrawString(titleFont, gameRef.mainPlayer.name, new Vector2(280, 195), Color.Black);
+            gameRef.SpriteBatch.DrawString(font, gameRef.mainPlayer.maxHealth + " / " + gameRef.mainPlayer.health.ToString(), new Vector2(280, 220), Color.Black);
             gameRef.SpriteBatch.Draw(_pixel, new Rectangle(280, 240, 120, 5), Color.LightGray);
             gameRef.SpriteBatch.Draw(_pixel, new Rectangle(280, 240, (int)(((float)gameRef.mainPlayer.health / (float)gameRef.mainPlayer.maxHealth) * 120.0f), 5), Color.Green);
 
-            gameRef.SpriteBatch.DrawString(font, gameRef.genericMonster.name, new Vector2(80, 50), Color.Black);
-            gameRef.SpriteBatch.DrawString(font, gameRef.genericMonster.health.ToString(), new Vector2(80, 70), Color.Black);
+            gameRef.SpriteBatch.DrawString(titleFont, gameRef.genericMonster.name, new Vector2(80, 45), Color.Black);
+            gameRef.SpriteBatch.DrawString(font, gameRef.genericMonster.maxHealth + " / " + gameRef.genericMonster.health.ToString(), new Vector2(80, 70), Color.Black);
 
             gameRef.SpriteBatch.Draw(gameRef.playerTex, new Vector2(15, 150), Color.White);
             gameRef.SpriteBatch.Draw(gameRef.monsterTex, new Vector2(340, 15), Color.White);
             gameRef.SpriteBatch.Draw(_pixel, new Rectangle(80, 90, 120, 5), Color.LightGray);
             gameRef.SpriteBatch.Draw(_pixel, new Rectangle(80, 90, (int)(((float)gameRef.genericMonster.health / (float)gameRef.genericMonster.maxHealth) * 120.0f), 5), Color.Green);
 
-                //foreach (var component in _gameComponents)
-                //{
-                //    component.Draw(gameTime, GameRef.SpriteBatch);
-                //}
+            gameRef.SpriteBatch.Draw(Game1.dialogueBox, new Vector2(15, 260), Color.White);
+            gameRef.SpriteBatch.DrawString(font, "O que " + gameRef.mainPlayer.name + " vai fazer?", new Vector2(50, 295), Color.Black);
 
-                gameRef.SpriteBatch.End();
+
+            gameRef.SpriteBatch.End();
+
+
+            gameRef.SpriteBatch.Begin();
+
+            gameRef.SpriteBatch.Draw(gameRef.backgroundBattle, new Rectangle(0, 340, 450, 340), Color.White);
+            gameRef.SpriteBatch.End();
+
+            foreach (Button b in buttonList)
+            {
+                b.Draw(gameTime, null);
+            }
 
             base.Draw(gameTime);
         }

@@ -10,6 +10,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Content\backgroundBattle2Screen.png" />
     <None Remove="Content\dialogueBox2.png" />
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />

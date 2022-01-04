@@ -10,7 +10,7 @@ namespace Battle_Engine
         RedCat,
         FarmerWalkRight,
         Asteroid,
-        Light7,
+        Light,
         MeteorIdle,
         ExplosionMeteor,
 

@@ -27,24 +27,21 @@ namespace Battle_Engine
         private Monster GenericMonster;
         public Monster genericMonster { get { return GenericMonster; } }
 
-        private Queue<string> _messages = new Queue<string>();
-        public Queue<string> messages { get { return _messages; } }
-
         private StateManager _stateManager;
         public StateManager stateManager { get { return _stateManager; } }
         public SpriteBatch SpriteBatch { get { return _spriteBatch; } }
         public InputSystem inputSystem;
         public PlayerChoiceScreen ChoiceState { get; private set; }
         public GamePlayState gamePlayState { get; private set; }
-        public Texture2D explosionTex;
-        public Animation explosion;
+        public Texture2D explosionTex, light;
+        public Animation explosion, lightAnim;
         public AnimationController animController;
         public bool playPlayerAnim = false;
         public bool playMonsterAnim = false;
         public float numf = 0;
         public bool animationIsPlaying = false;
-        public Animation currentAnimation;
-        public Texture2D playerTex, monsterTex;
+        public AnimationKey currentAnimation;
+        public Texture2D playerTex, monsterTex, backgroundBattle;
 
         public Game1()
         {
@@ -70,19 +67,23 @@ namespace Battle_Engine
             previousKeyboardState = Keyboard.GetState();
             playerTex = Content.Load<Texture2D>("playerTex");
             monsterTex = Content.Load<Texture2D>("monsterTex");
+            backgroundBattle = Content.Load<Texture2D>("backgroundBattle");
 
             animController = new AnimationController(this);
             //Components.Add(animController);
             explosionTex = Content.Load<Texture2D>("explosion");
+            light = Content.Load<Texture2D>("light7");
+            lightAnim = new Animation(light, 192, 192, 70, false);
             explosion = new Animation(explosionTex, 192, 192, 50, false);
             animController.AddAnimation(AnimationKey.Explosion, explosion);
+            animController.AddAnimation(AnimationKey.Light, lightAnim);
 
             base.Initialize();
         }
 
         public void AttackMethod()
         {
-            GenericMonster.health -= MainPlayer.power;
+            //GenericMonster.health -= MainPlayer.power;
             gamePlayState.st = "Você ataca o oponente com " + MainPlayer.weapon + " causando \n" + MainPlayer.power + " pontos de dano.";
             gamePlayState.NextLineMethod(gamePlayState.st);
 
@@ -90,15 +91,14 @@ namespace Battle_Engine
 
         public void WaitMethod()
         {
-            gamePlayState.st = "Você pula o seu turno.";
+            gamePlayState.st = "Você problematiza um assunto qualquer \n sem efeito algum.";
             gamePlayState.NextLineMethod(gamePlayState.st);
-            //gamePlayState.dialogueText = "You skipped your turn";
         }
 
         protected override void LoadContent()
         {
-            Attack = new Maneuver("Atacar", "A simple attack", 50, AttackMethod, explosion);
-            Wait = new Maneuver("Esperar", "Skipping the turn", 0, WaitMethod, explosion);
+            Attack = new Maneuver("Tapa Frouxo", "Um tapa frouxo", 50, AttackMethod, AnimationKey.Explosion);
+            Wait = new Maneuver("Problematizar", "Problematizar um ataque", 0, WaitMethod, AnimationKey.Light);
 
             MainPlayer = new Player("Hillary", 100, 50, "tapa", 20, 2, 100);
 

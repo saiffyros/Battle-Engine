@@ -29,6 +29,11 @@ namespace Battle_Engine
         private float speed = 5f;
         public string st = "";
         private int sentenceSize = 0;
+        private int damage = 0;
+        private float cronometroBar = 0;
+        private bool barAnimation = false;
+        private bool barAnimation2 = false;
+        int numm = 0;
 
         public GamePlayState(Game game) : base(game)
         {
@@ -50,9 +55,11 @@ namespace Battle_Engine
             actionManager.SetAction(() => InitialText());
             actionManager.SetAction(() => ShowChoiceMenu());
             actionManager.SetAction(() => PlayerAnimation());
+            actionManager.SetAction(() => PlayerLifeBar());
             actionManager.SetAction(() => PlayerAction());
             actionManager.SetAction(() => CheckMonsterHealth());
             actionManager.SetAction(() => MonsterAnimation());
+            actionManager.SetAction(() => MonsterLifeBar());
             actionManager.SetAction(() => MonsterAttack());
             actionManager.SetAction(() => CheckPlayerHealth());
 
@@ -79,7 +86,7 @@ namespace Battle_Engine
                 {
                     Console.WriteLine(listIndex);
 
-                    if (listIndex > 6)
+                    if (listIndex > 8)
                         listIndex = 0;
 
                     if (PlayerAlive && MonsterAlive)
@@ -94,6 +101,55 @@ namespace Battle_Engine
                         //dialogueText = "Game is over";
                         gameRef.Exit();
                     }
+                }
+            }
+
+            if (barAnimation2)
+            {
+                gameRef.animationIsPlaying = true;
+                cronometroBar += (float)gameTime.ElapsedGameTime.TotalSeconds * 50f;
+
+                if (cronometroBar > 3.0f)
+                {
+                    gameRef.genericMonster.health -= 1;
+                    numm += 1;
+                    cronometroBar = 0;
+
+                }
+
+                if (numm >= damage)
+                {
+                    barAnimation2 = false;
+                    gameRef.animationIsPlaying = false;
+                    numm = 0;
+                    listIndex += 1;
+                    actionManager.InvokeAction(listIndex);
+                    Console.WriteLine("done " + cronometroBar);
+                }
+            }
+
+
+            if (barAnimation)
+            {
+                gameRef.animationIsPlaying = true;
+                cronometroBar += (float)gameTime.ElapsedGameTime.TotalSeconds * 50f;
+
+                if (cronometroBar > 3.0f)
+                {
+                    gameRef.mainPlayer.health -= 1;
+                    numm += 1;
+                    cronometroBar = 0;
+
+                }
+
+                if (numm >= damage)
+                {
+                    barAnimation = false;
+                    gameRef.animationIsPlaying = false;
+                    numm = 0;
+                    listIndex += 1;
+                    actionManager.InvokeAction(listIndex);
+                    Console.WriteLine("done " + cronometroBar);
                 }
             }
         
@@ -122,13 +178,13 @@ namespace Battle_Engine
 
             gameRef.SpriteBatch.Begin();
 
-            gameRef.SpriteBatch.DrawString(font, gameRef.mainPlayer.name, new Vector2(280, 200), Color.Black);
-            gameRef.SpriteBatch.DrawString(font, gameRef.mainPlayer.health.ToString(), new Vector2(280, 220), Color.Black);
+            gameRef.SpriteBatch.DrawString(titleFont, gameRef.mainPlayer.name, new Vector2(280, 195), Color.Black);
+            gameRef.SpriteBatch.DrawString(font, gameRef.mainPlayer.maxHealth + " / " + gameRef.mainPlayer.health.ToString(), new Vector2(280, 220), Color.Black);
             gameRef.SpriteBatch.Draw(_pixel, new Rectangle(280, 240, 120, 5), Color.LightGray);
             gameRef.SpriteBatch.Draw(_pixel, new Rectangle(280, 240, (int)(((float)gameRef.mainPlayer.health / (float)gameRef.mainPlayer.maxHealth) * 120.0f), 5), Color.Green);
 
-            gameRef.SpriteBatch.DrawString(font, gameRef.genericMonster.name, new Vector2(80, 50), Color.Black);
-            gameRef.SpriteBatch.DrawString(font, gameRef.genericMonster.health.ToString(), new Vector2(80, 70), Color.Black);
+            gameRef.SpriteBatch.DrawString(titleFont, gameRef.genericMonster.name, new Vector2(80, 45), Color.Black);
+            gameRef.SpriteBatch.DrawString(font, gameRef.genericMonster.maxHealth + " / " + gameRef.genericMonster.health.ToString(), new Vector2(80, 70), Color.Black);
 
             gameRef.SpriteBatch.Draw(gameRef.playerTex, new Vector2(15, 150), Color.White);
             gameRef.SpriteBatch.Draw(gameRef.monsterTex, new Vector2(340, 15), Color.White);
@@ -213,8 +269,9 @@ namespace Battle_Engine
             gameRef.animationIsPlaying = true;
             listIndex += 1;
             actionManager.InvokeAction(listIndex);
-            gameRef.animController.SetAnimation(AnimationKey.Explosion);
-            gameRef.animController.PlayAnimation(AnimationKey.Explosion);
+            Maneuver action = gameRef.ChoiceState.selectedManeuver;
+            gameRef.animController.SetAnimation(action.ManeuverAnimation);
+            gameRef.animController.PlayAnimation(action.ManeuverAnimation);
         }
 
         public void MonsterAnimation()
@@ -227,6 +284,18 @@ namespace Battle_Engine
 
             listIndex += 1;
             actionManager.InvokeAction(listIndex);
+        }
+
+        public void MonsterLifeBar()
+        {
+            damage = gameRef.genericMonster.power; //change error damage
+            barAnimation = true;
+        }
+
+        public void PlayerLifeBar()
+        {
+            damage = gameRef.ChoiceState.selectedManeuver.Damage;
+            barAnimation2 = true;
         }
 
         public void PlayerAction()
@@ -256,7 +325,7 @@ namespace Battle_Engine
         {
             st = "Oponente te ataca causando " + gameRef.genericMonster.power + " pontos de dano.";
             NextLineMethod(st);
-            gameRef.mainPlayer.health -= gameRef.genericMonster.power;
+            //gameRef.mainPlayer.health -= gameRef.genericMonster.power;
         }
 
         public void CheckPlayerHealth()

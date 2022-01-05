@@ -35,6 +35,8 @@ namespace Battle_Engine
         private bool barAnimation2 = false;
         int numm = 0;
 
+        float tt = 0;
+
         public GamePlayState(Game game) : base(game)
         {
             
@@ -72,15 +74,12 @@ namespace Battle_Engine
             base.LoadContent();
         }
 
-
-
         public override void Update(GameTime gameTime)
         {
             MouseState mouseState = Mouse.GetState();
 
             mouseRectangle.X = mouseState.X;
             mouseRectangle.Y = mouseState.Y;
-            //if (windowArea.Intersects(new Rectangle(mouseState.X, mouseState.Y, 1, 1)))
             if (windowArea.Intersects(mouseRectangle) && gameRef.animationIsPlaying == false && done == true) { 
                 if (previousMouseState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Released)
                 {
@@ -98,7 +97,6 @@ namespace Battle_Engine
                     {
                         st = "Fim do jogo.";
                         NextLineMethod(st);
-                        //dialogueText = "Game is over";
                         gameRef.Exit();
                     }
                 }
@@ -114,7 +112,6 @@ namespace Battle_Engine
                     gameRef.genericMonster.health -= 1;
                     numm += 1;
                     cronometroBar = 0;
-
                 }
 
                 if (numm >= damage)
@@ -128,7 +125,6 @@ namespace Battle_Engine
                 }
             }
 
-
             if (barAnimation)
             {
                 gameRef.animationIsPlaying = true;
@@ -139,7 +135,6 @@ namespace Battle_Engine
                     gameRef.mainPlayer.health -= 1;
                     numm += 1;
                     cronometroBar = 0;
-
                 }
 
                 if (numm >= damage)
@@ -169,6 +164,15 @@ namespace Battle_Engine
 
             previousMouseState = mouseState;
 
+            
+            tt += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (tt > 5)
+            {
+                Console.WriteLine("Gameplay state is active");
+                tt = 0;
+            }
+
             base.Update(gameTime);
         }
 
@@ -191,22 +195,14 @@ namespace Battle_Engine
             gameRef.SpriteBatch.Draw(_pixel, new Rectangle(80, 90, 120, 5), Color.LightGray);
             gameRef.SpriteBatch.Draw(_pixel, new Rectangle(80, 90, (int)(((float)gameRef.genericMonster.health / (float)gameRef.genericMonster.maxHealth) * 120.0f), 5), Color.Green);
 
-
             if (gameRef.animationIsPlaying == false)
             {
                 gameRef.SpriteBatch.Draw(Game1.dialogueBox, new Vector2(15, 260), Color.White);
                 gameRef.SpriteBatch.DrawString(font, baseText, new Vector2(50, 290), Color.Black);
-
-                //GameRef.SpriteBatch.DrawString(font, dialogueText, new Vector2(200, 400), Color.White);
             }
-
-            //########## testing #####################################################
-
-
 
             if (gameRef.playPlayerAnim || gameRef.playMonsterAnim)
             {
-
                 gameRef.numf += (float)gameTime.ElapsedGameTime.TotalSeconds * speed * 35;
 
                 Rectangle rec;
@@ -224,8 +220,6 @@ namespace Battle_Engine
                 rec,
                 gameRef.animController.currentAnimation.ListaRetangulos[gameRef.animController.currentAnimation.FrameAtual],
                 Color.White);
-
-
 
                 if (gameRef.numf > 250.0f)
                 {
@@ -255,12 +249,12 @@ namespace Battle_Engine
 
         public void ShowChoiceMenu()
         {
-            StateManager stateManager = (StateManager)gameRef.Services.GetService(typeof(IStateManager));
-            stateManager.PushState(gameRef.ChoiceState);
+            //StateManager stateManager = (StateManager)gameRef.Services.GetService(typeof(IStateManager));
+            //stateManager.PushState(gameRef.ChoiceState);
             
             //I CAN RETRIVE THE SERVICE OR USE THE GAMEREF ONE (Cynthia that the said last one is better, no GC)
 
-            //GameRef.stateManager.PushState(GameRef.ChoiceState);
+            gameRef.stateManager.PushState(gameRef.ChoiceState);
         }
 
         public void PlayerAnimation()
@@ -269,7 +263,7 @@ namespace Battle_Engine
             gameRef.animationIsPlaying = true;
             listIndex += 1;
             actionManager.InvokeAction(listIndex);
-            Maneuver action = gameRef.ChoiceState.selectedManeuver;
+            Maneuver action = gameRef.ChoiceState.SelectedManeuver;
             gameRef.animController.SetAnimation(action.ManeuverAnimation);
             gameRef.animController.PlayAnimation(action.ManeuverAnimation);
         }
@@ -294,13 +288,13 @@ namespace Battle_Engine
 
         public void PlayerLifeBar()
         {
-            damage = gameRef.ChoiceState.selectedManeuver.Damage;
+            damage = gameRef.ChoiceState.SelectedManeuver.Damage;
             barAnimation2 = true;
         }
 
         public void PlayerAction()
         {
-            Maneuver action = gameRef.ChoiceState.selectedManeuver;
+            Maneuver action = gameRef.ChoiceState.SelectedManeuver;
             action.ManeuverAction.Invoke(); //null check?
         }
 

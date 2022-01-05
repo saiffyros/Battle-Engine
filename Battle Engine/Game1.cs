@@ -30,7 +30,6 @@ namespace Battle_Engine
         private StateManager _stateManager;
         public StateManager stateManager { get { return _stateManager; } }
         public SpriteBatch SpriteBatch { get { return _spriteBatch; } }
-        public InputSystem inputSystem;
         public PlayerChoiceScreen ChoiceState { get; private set; }
         public GamePlayState gamePlayState { get; private set; }
         public Texture2D explosionTex, light;
@@ -53,7 +52,6 @@ namespace Battle_Engine
             Components.Add(_stateManager);
             gamePlayState = new GamePlayState(this);
             ChoiceState = new PlayerChoiceScreen(this);
-            inputSystem = new InputSystem(this);
             _stateManager.PushState(gamePlayState);
         }
 
@@ -63,7 +61,6 @@ namespace Battle_Engine
             _graphics.PreferredBackBufferHeight = 680;
             _graphics.ApplyChanges();
 
-            dialogueBox = new Texture2D(GraphicsDevice, 10, 10);
             previousKeyboardState = Keyboard.GetState();
             playerTex = Content.Load<Texture2D>("playerTex");
             monsterTex = Content.Load<Texture2D>("monsterTex");
@@ -83,7 +80,6 @@ namespace Battle_Engine
 
         public void AttackMethod()
         {
-            //GenericMonster.health -= MainPlayer.power;
             gamePlayState.st = "Você ataca o oponente com " + MainPlayer.weapon + " causando \n" + MainPlayer.power + " pontos de dano.";
             gamePlayState.NextLineMethod(gamePlayState.st);
 
@@ -100,9 +96,7 @@ namespace Battle_Engine
             Attack = new Maneuver("Tapa Frouxo", "Um tapa frouxo", 50, AttackMethod, AnimationKey.Explosion);
             Wait = new Maneuver("Problematizar", "Problematizar um ataque", 0, WaitMethod, AnimationKey.Light);
 
-            MainPlayer = new Player("Hillary", 100, 50, "tapa", 20, 2, 100);
-
-            
+            MainPlayer = new Player("Hillary", 100, 50, "tapa", 20, 2, 100);    
 
             MainPlayer.listManeuvers.Add(Attack);
             MainPlayer.listManeuvers.Add(Wait);
@@ -112,7 +106,6 @@ namespace Battle_Engine
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("font");
             dialogueBox = Content.Load<Texture2D>("dialogueBar");
-            Components.Add(inputSystem);
         }
 
 
@@ -128,18 +121,7 @@ namespace Battle_Engine
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            //_spriteBatch.Begin();
-
-            //foreach (string text in _messages)
-            //{
-            //    _spriteBatch.DrawString(font, text, new Vector2(50, 200), Color.White);
-            //}
-
-          
-
-            //_spriteBatch.End();
+            //GraphicsDevice.Clear(Color.CornflowerBlue);
 
             base.Draw(gameTime);
         }

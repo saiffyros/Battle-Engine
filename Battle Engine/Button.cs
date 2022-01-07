@@ -34,7 +34,7 @@ namespace Battle_Engine
             this.gameRef = (Game1)game;
             PenColour = Color.Black;
             //_font = gameRef.font;
-            _font = gameRef.Content.Load<SpriteFont>("font");
+            _font = gameRef.Content.Load<SpriteFont>("buttonFont");
             _texture = gameRef.Content.Load<Texture2D>("Button");
             Text = buttonText;
             Position = position;
@@ -44,9 +44,9 @@ namespace Battle_Engine
         public Button(Game game, string buttonText, Vector2 position, string texture)
         {
             this.gameRef = (Game1)game;
-            PenColour = Color.White;
+            PenColour = Color.Black;
             //_font = gameRef.font;
-            _font = gameRef.Content.Load<SpriteFont>("font");
+            _font = gameRef.Content.Load<SpriteFont>("buttonFont");
             _texture = gameRef.Content.Load<Texture2D>(texture);
             Text = buttonText;
             Position = position;

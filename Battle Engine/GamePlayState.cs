@@ -14,7 +14,7 @@ namespace Battle_Engine
         public static ActionManager actionManager;
         private bool PlayerAlive = true;
         private bool MonsterAlive = true;
-        private SpriteFont font, titleFont;
+        private SpriteFont font, titleFont, smallFont;
         private Rectangle windowArea = new Rectangle(0, 0, 800, 600);
         private Rectangle mouseRectangle = new Rectangle(0, 0, 1, 1);
         MouseState previousMouseState;
@@ -49,6 +49,7 @@ namespace Battle_Engine
             actionManager = new ActionManager();
             font = gameRef.Content.Load<SpriteFont>("font");
             titleFont = gameRef.Content.Load<SpriteFont>("titleFont");
+            smallFont = gameRef.Content.Load<SpriteFont>("smallFont");
             _pixel = new Texture2D(GraphicsDevice, 1, 1);
             Color[] data = new Color[1];
             data[0] = Color.White;
@@ -178,26 +179,40 @@ namespace Battle_Engine
 
         public override void Draw(GameTime gameTime)
         {
-            gameRef.GraphicsDevice.Clear(Color.CadetBlue);
+            gameRef.GraphicsDevice.Clear(Color.White);
 
             gameRef.SpriteBatch.Begin();
 
-            gameRef.SpriteBatch.DrawString(titleFont, gameRef.mainPlayer.name, new Vector2(280, 195), Color.Black);
-            gameRef.SpriteBatch.DrawString(font, gameRef.mainPlayer.maxHealth + " / " + gameRef.mainPlayer.health.ToString(), new Vector2(280, 220), Color.Black);
-            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(280, 240, 120, 5), Color.LightGray);
-            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(280, 240, (int)(((float)gameRef.mainPlayer.health / (float)gameRef.mainPlayer.maxHealth) * 120.0f), 5), Color.Green);
+            gameRef.SpriteBatch.Draw(gameRef.backgroundBattle, new Rectangle(0, 0, 450, 340), Color.White);
+            gameRef.SpriteBatch.Draw(gameRef.backgroundBattleBottom, new Rectangle(0, 340, 450, 340), Color.White);
 
-            gameRef.SpriteBatch.DrawString(titleFont, gameRef.genericMonster.name, new Vector2(80, 45), Color.Black);
-            gameRef.SpriteBatch.DrawString(font, gameRef.genericMonster.maxHealth + " / " + gameRef.genericMonster.health.ToString(), new Vector2(80, 70), Color.Black);
 
-            gameRef.SpriteBatch.Draw(gameRef.playerTex, new Vector2(15, 150), Color.White);
-            gameRef.SpriteBatch.Draw(gameRef.monsterTex, new Vector2(340, 15), Color.White);
-            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(80, 90, 120, 5), Color.LightGray);
-            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(80, 90, (int)(((float)gameRef.genericMonster.health / (float)gameRef.genericMonster.maxHealth) * 120.0f), 5), Color.Green);
+            //gameRef.SpriteBatch.Draw(gameRef.battlepadPlayer, new Rectangle(15, 275, 152, 22), Color.White);
+            gameRef.SpriteBatch.Draw(gameRef.battlepadEnemy, new Rectangle(245, 165, 200, 50), Color.White);
+
+            gameRef.SpriteBatch.Draw(gameRef.playerTex, new Rectangle(25, 75, 192, 192), Color.White);
+            gameRef.SpriteBatch.Draw(gameRef.monsterTex, new Rectangle(250, 0, 192, 192), Color.White);
+
+            gameRef.SpriteBatch.Draw(gameRef.playerBar, new Rectangle(250, 195, 200, 62), Color.White);
+            gameRef.SpriteBatch.Draw(gameRef.enemyBar, new Rectangle(0, 30, 200, 52), Color.White);
+
+            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(0, 257, 450, 85), Color.Black);
+
+            gameRef.SpriteBatch.DrawString(titleFont, gameRef.mainPlayer.name, new Vector2(280, 200), Color.Black);
+            gameRef.SpriteBatch.DrawString(smallFont, gameRef.mainPlayer.maxHealth + "     " + gameRef.mainPlayer.health.ToString(), new Vector2(370, 235), Color.Black);
+            gameRef.SpriteBatch.DrawString(smallFont, "66", new Vector2(415, 205), Color.Black);
+            //gameRef.SpriteBatch.Draw(_pixel, new Rectangle(280, 240, 120, 5), Color.LightGray);
+            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(352, 226, (int)(((float)gameRef.mainPlayer.health / (float)gameRef.mainPlayer.maxHealth) * 80.0f), 5), Color.GreenYellow);
+
+            gameRef.SpriteBatch.DrawString(titleFont, gameRef.genericMonster.name, new Vector2(10, 35), Color.Black);
+            //gameRef.SpriteBatch.DrawString(font, gameRef.genericMonster.maxHealth + " / " + gameRef.genericMonster.health.ToString(), new Vector2(80, 70), Color.Black);
+            gameRef.SpriteBatch.DrawString(smallFont, "66", new Vector2(145, 43), Color.Black);
+            //gameRef.SpriteBatch.Draw(_pixel, new Rectangle(80, 90, 120, 5), Color.LightGray);
+            gameRef.SpriteBatch.Draw(_pixel, new Rectangle(83, 66, (int)(((float)gameRef.genericMonster.health / (float)gameRef.genericMonster.maxHealth) * 80.0f), 5), Color.GreenYellow);
 
             if (gameRef.animationIsPlaying == false)
             {
-                gameRef.SpriteBatch.Draw(Game1.dialogueBox, new Vector2(15, 260), Color.White);
+                gameRef.SpriteBatch.Draw(Game1.dialogueBox, new Vector2(15, 255), Color.White);
                 gameRef.SpriteBatch.DrawString(font, baseText, new Vector2(50, 290), Color.Black);
             }
 

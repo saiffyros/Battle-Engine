@@ -32,31 +32,31 @@ namespace Battle_Engine
 
         protected override void LoadContent()
         {
-            font = gameRef.Content.Load<SpriteFont>("font");
+            font = gameRef.Content.Load<SpriteFont>("buttonFont");
             titleFont = gameRef.Content.Load<SpriteFont>("titleFont");
             buttonTexture = gameRef.Content.Load<Texture2D>("Button");
 
-            var label = new Label(gameRef, "Escolha uma ação!", titleFont, new Vector2(150, 5));
-            LocalComponents.Add(label);
+            //var label = new Label(gameRef, "Escolha uma ação!", titleFont, new Vector2(150, 5));
+            //LocalComponents.Add(label);
 
             foreach (Maneuver maneuver in gameRef.mainPlayer.listManeuvers)
             {
                 Vector2 posBtn;
                 if (gameRef.mainPlayer.listManeuvers.IndexOf(maneuver) == 0)
                 {
-                    posBtn = new Vector2(50, 400);
+                    posBtn = new Vector2(20, 400);
                 }
                 else if (gameRef.mainPlayer.listManeuvers.IndexOf(maneuver) == 1)
                 {
-                    posBtn = new Vector2(250, 400);
+                    posBtn = new Vector2(240, 400);
                 }
                 else if (gameRef.mainPlayer.listManeuvers.IndexOf(maneuver) == 2)
                 {
-                    posBtn = new Vector2(50, 480);
+                    posBtn = new Vector2(20, 480);
                 }
                 else
                 {
-                    posBtn = new Vector2(250, 480);
+                    posBtn = new Vector2(240, 480);
                 }
 
                 Button AttackBtn = new Button(gameRef, maneuver.Name, posBtn, "buttonTexture");
@@ -65,7 +65,10 @@ namespace Battle_Engine
                 buttonList.Add(AttackBtn);
             }
 
-            Button cancelBtn = new Button(gameRef, "Voltar", new Vector2(50, 600), "cancelBtn");
+            Button cancelBtn = new Button(gameRef, "Voltar", new Vector2(50, 600), "cancelBtn")
+            {
+                PenColour = Color.White,
+            };
             //MUDAR!!!!!!!!!!!!!
             cancelBtn.Click += delegate { SelectedManeuver = gameRef.mainPlayer.listManeuvers[1]; BackToPlayState(); }; 
             buttonList.Add(cancelBtn);
@@ -100,7 +103,7 @@ namespace Battle_Engine
 
             gameRef.SpriteBatch.Begin();
 
-            gameRef.SpriteBatch.Draw(gameRef.backgroundBattle, new Rectangle(0, 340, 450, 340), Color.White);
+            gameRef.SpriteBatch.Draw(gameRef.backgroundBattleBottom, new Rectangle(0, 340, 450, 340), Color.White);
             gameRef.SpriteBatch.End();
 
             foreach (Button b in buttonList)

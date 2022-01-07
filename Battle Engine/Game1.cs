@@ -40,7 +40,7 @@ namespace Battle_Engine
         public float numf = 0;
         public bool animationIsPlaying = false;
         public AnimationKey currentAnimation;
-        public Texture2D playerTex, monsterTex, backgroundBattle;
+        public Texture2D playerTex, monsterTex, backgroundBattleBottom, backgroundBattle, battlepadPlayer, battlepadEnemy, playerBar, enemyBar;
 
         public Game1()
         {
@@ -62,9 +62,14 @@ namespace Battle_Engine
             _graphics.ApplyChanges();
 
             previousKeyboardState = Keyboard.GetState();
-            playerTex = Content.Load<Texture2D>("playerTex");
-            monsterTex = Content.Load<Texture2D>("monsterTex");
-            backgroundBattle = Content.Load<Texture2D>("backgroundBattle");
+            playerTex = Content.Load<Texture2D>("DilmaCostas");
+            monsterTex = Content.Load<Texture2D>("DilmaFrente");
+            backgroundBattleBottom = Content.Load<Texture2D>("backgroundBottomBattle");
+            backgroundBattle = Content.Load<Texture2D>("backgroundBattleDay");
+            battlepadPlayer = Content.Load<Texture2D>("battlepadPlayer");
+            battlepadEnemy = Content.Load<Texture2D>("battlepadEnemy");
+            playerBar = Content.Load<Texture2D>("playerBar");
+            enemyBar = Content.Load<Texture2D>("enemyBar");
 
             animController = new AnimationController(this);
             //Components.Add(animController);
@@ -96,12 +101,12 @@ namespace Battle_Engine
             Attack = new Maneuver("Tapa Frouxo", "Um tapa frouxo", 50, AttackMethod, AnimationKey.Explosion);
             Wait = new Maneuver("Problematizar", "Problematizar um ataque", 0, WaitMethod, AnimationKey.Light);
 
-            MainPlayer = new Player("Hillary", 100, 50, "tapa", 20, 2, 100);    
+            MainPlayer = new Player("Dilma", 100, 50, "tapa", 20, 2, 100);    
 
             MainPlayer.listManeuvers.Add(Attack);
             MainPlayer.listManeuvers.Add(Wait);
 
-            GenericMonster = new Monster("Trump", 150, 30, 2, 150);
+            GenericMonster = new Monster("Dilma", 150, 30, 2, 150);
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("font");

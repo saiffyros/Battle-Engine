@@ -44,19 +44,19 @@ namespace Battle_Engine
                 Vector2 posBtn;
                 if (gameRef.mainPlayer.listManeuvers.IndexOf(maneuver) == 0)
                 {
-                    posBtn = new Vector2(20, 400);
+                    posBtn = new Vector2(20, 395);
                 }
                 else if (gameRef.mainPlayer.listManeuvers.IndexOf(maneuver) == 1)
                 {
-                    posBtn = new Vector2(240, 400);
+                    posBtn = new Vector2(240, 395);
                 }
                 else if (gameRef.mainPlayer.listManeuvers.IndexOf(maneuver) == 2)
                 {
-                    posBtn = new Vector2(20, 480);
+                    posBtn = new Vector2(20, 500);
                 }
                 else
                 {
-                    posBtn = new Vector2(240, 480);
+                    posBtn = new Vector2(240, 500);
                 }
 
                 Button AttackBtn = new Button(gameRef, maneuver.Name, posBtn, "buttonTexture");
@@ -103,7 +103,7 @@ namespace Battle_Engine
 
             gameRef.SpriteBatch.Begin();
 
-            gameRef.SpriteBatch.Draw(gameRef.backgroundBattleBottom, new Rectangle(0, 340, 450, 340), Color.White);
+            //gameRef.SpriteBatch.Draw(gameRef.backgroundBattleBottom, new Rectangle(0, 340, 450, 340), Color.White);
             gameRef.SpriteBatch.End();
 
             foreach (Button b in buttonList)

@@ -5,14 +5,19 @@ using System.Text;
 
 namespace Battle_Engine
 {
-    public class Player : Monster
+    public class Polimon// : Monster
     {
+        public string name { get; set; }
+        public int health { get; set; }
+        public int power { get; set; }
+        public int luck { get; set; }
+        public int maxHealth { get; set; }
         public string weapon { get; set; }
         public int xp { get; set; }
 
         public List<Maneuver> listManeuvers = new List<Maneuver>();
 
-        public Player(string _name, int _health, int _power, string _weapon, int _xp, int _luck, int _maxHealth)
+        public Polimon(string _name, int _health, int _power, string _weapon, int _xp, int _luck, int _maxHealth)
         {
             name = _name;
             health = _health;
@@ -23,7 +28,7 @@ namespace Battle_Engine
             maxHealth = _maxHealth;
         }
 
-        public Player()
+        public Polimon()
         {
 
         }

@@ -13,6 +13,7 @@ namespace Battle_Engine
         Light,
         MeteorIdle,
         ExplosionMeteor,
+        Vacina,
 
         GeorgeCimaAnim,
         GeorgeBaixoAnim,

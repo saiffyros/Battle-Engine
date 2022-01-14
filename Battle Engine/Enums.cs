@@ -14,6 +14,9 @@ namespace Battle_Engine
         MeteorIdle,
         ExplosionMeteor,
         Vacina,
+        Mandioca,
+        Scracth,
+        Slam,
 
         GeorgeCimaAnim,
         GeorgeBaixoAnim,
@@ -30,5 +33,16 @@ namespace Battle_Engine
     {
         player,
         ship
+    }
+
+    public enum ModuleKey
+    {
+        Module1,
+        Module2
+    }
+
+    public enum ScreenKey
+    {
+        Screen1
     }
 }

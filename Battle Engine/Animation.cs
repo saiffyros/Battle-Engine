@@ -102,6 +102,34 @@ namespace Battle_Engine
             }
         }
 
+        public Animation(Texture2D texture, int largura, int altura, int duration, bool looping, Rectangle rect)
+        {
+            sprite = texture;
+            Largura = largura;
+            Altura = altura;
+            Loop = looping;
+            Duration = duration;
+            Cronometro = 0;
+            FrameAtual = 0;
+            Ativa = false;
+            Position = rect;
+            ListaRetangulos = new List<Rectangle>();
+
+            Colunas = texture.Width / largura;
+            Linhas = texture.Height / altura;
+
+            NumeroAnimations = Colunas * Linhas;
+
+            for (int y = 0; y < Linhas; y++)
+            {
+                for (int x = 0; x < Colunas; x++)
+                {
+                    ListaRetangulos.Add(new Rectangle(x * Largura, y * Altura, Largura, Altura));
+                }
+            }
+        }
+
+
 
         public void Update(GameTime gameTime)
         {

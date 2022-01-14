@@ -330,8 +330,8 @@ namespace Battle_Engine
             gameRef.animController.SetAnimation(AnimationKey.Explosion);
             gameRef.animController.PlayAnimation(AnimationKey.Explosion);
 
-            listIndex += 1;
-            actionManager.InvokeAction(listIndex);
+            //listIndex += 1;
+            //actionManager.InvokeAction(listIndex);
         }
 
         public void MonsterLifeBar()
@@ -356,13 +356,13 @@ namespace Battle_Engine
         {
             if (gameRef.genericMonster.health > 0)
             {
-                st = "O oponente se prepara para atacar.";
+                st = gameRef.genericMonster.name + " se prepara para atacar.";
                 NextLineMethod(st);
 
             }
             else
             {
-                st = "O oponente desmaiou.";
+                st = gameRef.genericMonster.name + " desmaiou.";
                 NextLineMethod(st);
                 //dialogueText = "Monster died.";
                 MonsterAlive = false;

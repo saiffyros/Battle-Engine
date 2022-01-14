@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,13 +8,15 @@ namespace Battle_Engine
 {
     public class Polimon// : Monster
     {
-        public string name { get; set; }
-        public int health { get; set; }
-        public int power { get; set; }
-        public int luck { get; set; }
-        public int maxHealth { get; set; }
-        public string weapon { get; set; }
-        public int xp { get; set; }
+        public string name;
+        public int health;
+        public int power;
+        public int luck;
+        public int maxHealth;
+        public string weapon;
+        public int xp;
+        public Texture2D sprite;
+        public int level;
 
         public List<Maneuver> listManeuvers = new List<Maneuver>();
 
@@ -26,6 +29,7 @@ namespace Battle_Engine
             xp = _xp;
             luck = _luck;
             maxHealth = _maxHealth;
+            level = 1;
         }
 
         public Polimon()

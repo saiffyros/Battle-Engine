@@ -15,12 +15,12 @@ namespace Battle_Engine
         public int Altura;
         public int NumeroAnimations;
         public List<Rectangle> ListaRetangulos;
-        int Duration;
+        public int Duration;
         bool Loop;
         float Cronometro;
         public int FrameAtual;
         public bool Ativa;
-        private Rectangle Position = new Rectangle(0, 0, 0, 0);
+        public Rectangle Position = new Rectangle(0, 0, 0, 0);
         public bool Drawing = false;
 
         public Animation(Texture2D texture, int largura, int altura, int duration, bool looping)

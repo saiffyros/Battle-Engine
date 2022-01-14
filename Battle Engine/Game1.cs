@@ -32,7 +32,7 @@ namespace Battle_Engine
         public PlayerChoiceScreen ChoiceState { get; private set; }
         public GamePlayState gamePlayState { get; private set; }
         public Texture2D explosionTex, light, vacina, mandioca;
-        public Animation explosion, lightAnim, vacinaAnim, mandiocaAnim, scratchAnim, slamAnim;
+        public Animation explosion, lightAnim, vacinaAnim, mandiocaAnim, poopAnim, scratchAnim;
         public AnimationController animController;
         public bool playPlayerAnim = false;
         public bool playMonsterAnim = false;
@@ -41,7 +41,7 @@ namespace Battle_Engine
         public AnimationKey currentAnimation;
         public Texture2D playerTex, monsterTex, backgroundBattleBottom, backgroundBattle;
         public Texture2D battlepadPlayer, battlepadEnemy, playerBar, enemyBar, logoPT;
-        public Texture2D scracth, slam;
+        public Texture2D poop, scratch;
 
         public Game1()
         {
@@ -72,28 +72,26 @@ namespace Battle_Engine
             playerBar = Content.Load<Texture2D>("playerBar");
             enemyBar = Content.Load<Texture2D>("enemyBar");
             logoPT = Content.Load<Texture2D>("logoPT");
-            scracth = Content.Load<Texture2D>("scratchAnim");
-            slam = Content.Load<Texture2D>("slamAnim");
+            poop = Content.Load<Texture2D>("poopAnim");
+            scratch = Content.Load<Texture2D>("scratchAnim");
 
             animController = new AnimationController(this);
-            //Components.Add(animController);
             explosionTex = Content.Load<Texture2D>("explosion");
             light = Content.Load<Texture2D>("light7");
             vacina = Content.Load<Texture2D>("vacinaAnim");
             mandioca = Content.Load<Texture2D>("mandiocaAnim");
-            lightAnim = new Animation(light, 192, 192, 70, false);
-            explosion = new Animation(explosionTex, 192, 192, 50, false);
-            vacinaAnim = new Animation(vacina, 450, 340, 50, false);
-            mandiocaAnim = new Animation(mandioca, 450, 340, 50, false);
-            scratchAnim = new Animation(scracth, 192, 192, 50, false, new Rectangle(258, 0, 192, 192));
-            slamAnim = new Animation(slam, 450, 340, 120, false);
-
+            lightAnim = new Animation(light, 192, 192, 70, false, new Rectangle(258, 0, 192, 192));
+            explosion = new Animation(explosionTex, 192, 192, 50, false, new Rectangle(258, 0, 192, 192));
+            vacinaAnim = new Animation(vacina, 450, 340, 150, false, new Rectangle(0, 0, 450, 340));
+            mandiocaAnim = new Animation(mandioca, 450, 340, 50, false, new Rectangle(0, 0, 450, 340));
+            poopAnim = new Animation(poop, 450, 340, 50, false, new Rectangle(0, 0, 450, 340));
+            scratchAnim = new Animation(scratch, 192, 192, 60, false, new Rectangle(258, 0, 192, 192));
             animController.AddAnimation(AnimationKey.Explosion, explosion);
             animController.AddAnimation(AnimationKey.Light, lightAnim);
             animController.AddAnimation(AnimationKey.Vacina, vacinaAnim);
             animController.AddAnimation(AnimationKey.Mandioca, mandiocaAnim);
-            animController.AddAnimation(AnimationKey.Scracth, scratchAnim);
-            animController.AddAnimation(AnimationKey.Slam, slamAnim);
+            animController.AddAnimation(AnimationKey.Poop, poopAnim);
+            animController.AddAnimation(AnimationKey.Scratch, scratchAnim);
 
             base.Initialize();
         }
@@ -101,43 +99,44 @@ namespace Battle_Engine
         public void AttackMethod()
         {
             gamePlayState.st = "Você ataca o oponente com " + MainPlayer.weapon + " causando \n" + MainPlayer.power + " pontos de dano.";
-            gamePlayState.NextLineMethod(gamePlayState.st);
+            gamePlayState.drawTextSlow.NextLineMethod(gamePlayState.st);
 
         }
 
         public void WaitMethod()
         {
-            gamePlayState.st = "Você problematiza um assunto qualquer \n sem efeito algum.";
-            gamePlayState.NextLineMethod(gamePlayState.st);
+            gamePlayState.st = "Você se caga de medo e \n tenta sair de fininho.";
+            gamePlayState.drawTextSlow.NextLineMethod(gamePlayState.st);
+
         }
 
         public void VacinaMethod()
         {
-            gamePlayState.st = "Você atira uma injeção de \nCoronavac contra " + genericMonster.name + ".";
-            gamePlayState.NextLineMethod(gamePlayState.st);
-        }
-
-        public void MandiocaMethod()
-        {
-            gamePlayState.st = "Você atira uma mandioca contra " + genericMonster.name + ".";
-            gamePlayState.NextLineMethod(gamePlayState.st);
+            gamePlayState.st = "Você atira uma injeção de \nCoronavac contra " + genericMonster.name;
+            gamePlayState.drawTextSlow.NextLineMethod(gamePlayState.st);
         }
 
         protected override void LoadContent()
         {
-            Attack = new Maneuver("Saco de Vento", "Um tapa frouxo", 50, AttackMethod, AnimationKey.Scracth);
-            Mascara = new Maneuver("Máscara", "Problematizar um ataque", 30, WaitMethod, AnimationKey.Slam);
-            Mandioca = new Maneuver("Mandioca", "Problematizar um ataque", 30, MandiocaMethod, AnimationKey.Mandioca);
-            Vacina = new Maneuver("Vacina", "Problematizar um ataque", 30, VacinaMethod, AnimationKey.Vacina);
+            Attack = new Maneuver("Tapa Frouxo", "Um tapa frouxo", 50, AttackMethod, AnimationKey.Scratch);
+            Mascara = new Maneuver("Mandioca", "Problematizar um ataque", 0, WaitMethod, AnimationKey.Poop);
+            Mandioca = new Maneuver("Saco de Vento", "Problematizar um ataque", 30, WaitMethod, AnimationKey.Mandioca);
+            Vacina = new Maneuver("Vacina", "Uma injeção de Coronavac", 30, VacinaMethod, AnimationKey.Vacina);
 
-            MainPlayer = new Polimon("Dilma", 100, 50, "tapa", 20, 2, 100);    
+            MainPlayer = new Polimon("Dilma", 100, 50, "tapa", 20, 2, 100)
+            {
+                level = 24,
+            };
 
             MainPlayer.listManeuvers.Add(Attack);
             MainPlayer.listManeuvers.Add(Mascara);
             MainPlayer.listManeuvers.Add(Mandioca);
             MainPlayer.listManeuvers.Add(Vacina);
 
-            GenericMonster = new Polimon("Janaína", 150, 30, "tapa", 2, 0, 150);
+            GenericMonster = new Polimon("Janaína", 150, 30, "tapa", 2, 0, 150)
+            {
+                level = 100
+            };
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("font");
@@ -157,8 +156,6 @@ namespace Battle_Engine
 
         protected override void Draw(GameTime gameTime)
         {
-            //GraphicsDevice.Clear(Color.CornflowerBlue);
-
             base.Draw(gameTime);
         }
     }

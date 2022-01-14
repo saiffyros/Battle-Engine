@@ -11,7 +11,7 @@ namespace Battle_Engine
     public class PlayerChoiceScreen : GameState
     {
         private SpriteFont font, titleFont;
-        public Maneuver SelectedManeuver;
+        //public Maneuver SelectedManeuver;
         private Texture2D buttonTexture;
         Texture2D _pixel;
         private List<Button> buttonList = new List<Button>();
@@ -61,16 +61,16 @@ namespace Battle_Engine
 
                 Button AttackBtn = new Button(gameRef, maneuver.Name, posBtn, "buttonTexture");
 
-                AttackBtn.Click += delegate { SelectedManeuver = maneuver; BackToPlayState(); };
+                AttackBtn.Click += delegate { gameRef.gamePlayState.SelectedManeuver = maneuver; BackToPlayState(); };
                 buttonList.Add(AttackBtn);
             }
 
-            Button cancelBtn = new Button(gameRef, "Voltar", new Vector2(50, 600), "cancelBtn")
+            Button cancelBtn = new Button(gameRef, "Arregar", new Vector2(50, 600), "cancelBtn")
             {
                 PenColour = Color.White,
             };
             //MUDAR!!!!!!!!!!!!!
-            cancelBtn.Click += delegate { SelectedManeuver = gameRef.mainPlayer.listManeuvers[1]; BackToPlayState(); }; 
+            cancelBtn.Click += delegate { gameRef.gamePlayState.SelectedManeuver = gameRef.mainPlayer.listManeuvers[1]; BackToPlayState(); }; 
             buttonList.Add(cancelBtn);
 
             base.LoadContent();
@@ -78,9 +78,9 @@ namespace Battle_Engine
 
         public void BackToPlayState()
         {
-            Console.WriteLine("Manuever: " + SelectedManeuver.Description);
+            Console.WriteLine("Manuever: " + gameRef.gamePlayState.SelectedManeuver.Description);
 
-            gameRef.currentAnimation = SelectedManeuver.ManeuverAnimation;
+            gameRef.currentAnimation = gameRef.gamePlayState.SelectedManeuver.ManeuverAnimation;
             gameRef.stateManager.ChangeState(gameRef.gamePlayState);
             GamePlayState.listIndex += 1;
             Console.WriteLine("From choice " + GamePlayState.listIndex);

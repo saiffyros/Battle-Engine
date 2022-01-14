@@ -17,6 +17,8 @@ namespace Battle_Engine
         Mandioca,
         Scracth,
         Slam,
+        Poop,
+        Scratch,
 
         GeorgeCimaAnim,
         GeorgeBaixoAnim,

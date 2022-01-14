@@ -19,16 +19,8 @@ namespace Battle_Engine
         private Rectangle mouseRectangle = new Rectangle(0, 0, 1, 1);
         MouseState previousMouseState;
         Texture2D _pixel;
-        private bool done = false;
-        private int index;
-        private string baseText = "";
-        private char[] ch = new char[1];
-        
-        private float cronometro = 0;
-        private float letterTime = 0.05f;
-        private float speed = 5f;
+        //private float speed = 5f;
         public string st = "";
-        private int sentenceSize = 0;
         private int damage = 0;
         private float cronometroBar = 0;
         private bool barAnimation = false;
@@ -37,8 +29,9 @@ namespace Battle_Engine
         bool monsterBlink = false;
         float monsterBlinkTimer = 0.0f;
         float monsterBlinkEnd = 0.0f;
+        public DrawTextSlow drawTextSlow;
+        public Maneuver SelectedManeuver;
 
-        float tt = 0;
 
         public GamePlayState(Game game) : base(game)
         {
@@ -48,7 +41,8 @@ namespace Battle_Engine
         public override void Initialize()
         {
             previousMouseState = Mouse.GetState();
-            
+            drawTextSlow = new DrawTextSlow(gameRef);
+
             actionManager = new ActionManager();
             font = gameRef.Content.Load<SpriteFont>("font");
             titleFont = gameRef.Content.Load<SpriteFont>("titleFont");
@@ -57,7 +51,6 @@ namespace Battle_Engine
             Color[] data = new Color[1];
             data[0] = Color.White;
             _pixel.SetData(data);
-            ch[0] = ' ';
             actionManager.SetAction(() => InitialText());
             actionManager.SetAction(() => ShowChoiceMenu());
             actionManager.SetAction(() => PlayerAnimation());
@@ -71,7 +64,8 @@ namespace Battle_Engine
             actionManager.SetAction(() => CheckPlayerHealth());
 
             st = "Que comece a batalha!";
-            NextLineMethod(st);
+            drawTextSlow.baseText = "Que comece a Batalha";
+            drawTextSlow.NextLineMethod(st);
         }
 
         protected override void LoadContent()
@@ -85,7 +79,7 @@ namespace Battle_Engine
 
             mouseRectangle.X = mouseState.X;
             mouseRectangle.Y = mouseState.Y;
-            if (windowArea.Intersects(mouseRectangle) && gameRef.animationIsPlaying == false && done == true) { 
+            if (windowArea.Intersects(mouseRectangle) && gameRef.animationIsPlaying == false && drawTextSlow.done == true) { 
                 if (previousMouseState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Released)
                 {
                     Console.WriteLine(listIndex);
@@ -101,7 +95,8 @@ namespace Battle_Engine
                     else
                     {
                         st = "Fim do jogo.";
-                        NextLineMethod(st);
+                        drawTextSlow.baseText = "Fim do jogo";
+                        drawTextSlow.NextLineMethod(st);
                         gameRef.Exit();
                     }
                 }
@@ -152,31 +147,10 @@ namespace Battle_Engine
                     Console.WriteLine("done " + cronometroBar);
                 }
             }
-        
-            cronometro += (float)gameTime.ElapsedGameTime.TotalSeconds * speed;
 
-            if (cronometro > letterTime && done == false && gameRef.animationIsPlaying == false)
-            {
-                baseText += ch[index];
-                cronometro = 0;
-                index += 1;
-
-                if (index >= sentenceSize)
-                {
-                    done = true;
-                }
-            }
+            drawTextSlow.Update(gameTime);
 
             previousMouseState = mouseState;
-
-            
-            tt += (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (tt > 5)
-            {
-                Console.WriteLine("Gameplay state is active");
-                tt = 0;
-            }
 
             base.Update(gameTime);
         }
@@ -189,9 +163,7 @@ namespace Battle_Engine
 
             gameRef.SpriteBatch.Draw(gameRef.backgroundBattle, new Rectangle(0, 0, 450, 340), Color.White);
             gameRef.SpriteBatch.Draw(gameRef.backgroundBattleBottom, new Rectangle(0, 340, 450, 340), Color.White);
-            gameRef.SpriteBatch.Draw(gameRef.logoPT, new Rectangle(127, 385, 200, 200), Color.White);
 
-            //gameRef.SpriteBatch.Draw(gameRef.battlepadPlayer, new Rectangle(15, 275, 152, 22), Color.White);
             gameRef.SpriteBatch.Draw(gameRef.battlepadEnemy, new Rectangle(245, 165, 200, 50), Color.White);
 
             gameRef.SpriteBatch.Draw(gameRef.playerTex, new Rectangle(25, 75, 192, 192), Color.White);
@@ -208,7 +180,6 @@ namespace Battle_Engine
                 else
                 {
                     gameRef.SpriteBatch.Draw(gameRef.monsterTex, new Rectangle(250, 0, 192, 192), Color.White);
-
                 }
 
                 if (monsterBlinkTimer > 0.3f)
@@ -218,7 +189,6 @@ namespace Battle_Engine
                 if(monsterBlinkEnd > 0.9)
                 {
                     monsterBlink = false;
-                    //gameRef.animationIsPlaying = false;
                     monsterBlinkTimer = 0.0f;
                     monsterBlinkEnd = 0.0f;
                     listIndex += 1;
@@ -234,32 +204,24 @@ namespace Battle_Engine
 
             gameRef.SpriteBatch.Draw(_pixel, new Rectangle(0, 257, 450, 85), Color.Black);
 
-            gameRef.SpriteBatch.DrawString(titleFont, gameRef.mainPlayer.name, new Vector2(280, 200), Color.Black);
+            gameRef.SpriteBatch.DrawString(titleFont, gameRef.mainPlayer.name, new Vector2(275, 200), Color.Black);
             gameRef.SpriteBatch.DrawString(smallFont, gameRef.mainPlayer.maxHealth + "     " + gameRef.mainPlayer.health.ToString(), new Vector2(370, 235), Color.Black);
-            gameRef.SpriteBatch.DrawString(smallFont, "66", new Vector2(415, 205), Color.Black);
-            //gameRef.SpriteBatch.Draw(_pixel, new Rectangle(280, 240, 120, 5), Color.LightGray);
+            gameRef.SpriteBatch.DrawString(smallFont, gameRef.mainPlayer.level.ToString(), new Vector2(415, 205), Color.Black);
             gameRef.SpriteBatch.Draw(_pixel, new Rectangle(352, 226, (int)(((float)gameRef.mainPlayer.health / (float)gameRef.mainPlayer.maxHealth) * 80.0f), 5), Color.GreenYellow);
 
-            gameRef.SpriteBatch.DrawString(titleFont, gameRef.genericMonster.name, new Vector2(10, 35), Color.Black);
-            //gameRef.SpriteBatch.DrawString(font, gameRef.genericMonster.maxHealth + " / " + gameRef.genericMonster.health.ToString(), new Vector2(80, 70), Color.Black);
-            gameRef.SpriteBatch.DrawString(smallFont, "66", new Vector2(145, 43), Color.Black);
-            //gameRef.SpriteBatch.Draw(_pixel, new Rectangle(80, 90, 120, 5), Color.LightGray);
+            gameRef.SpriteBatch.DrawString(titleFont, gameRef.genericMonster.name, new Vector2(8, 40), Color.Black);
+            gameRef.SpriteBatch.DrawString(smallFont, gameRef.genericMonster.level.ToString(), new Vector2(145, 43), Color.Black);
             gameRef.SpriteBatch.Draw(_pixel, new Rectangle(83, 66, (int)(((float)gameRef.genericMonster.health / (float)gameRef.genericMonster.maxHealth) * 80.0f), 5), Color.GreenYellow);
-
-            if (gameRef.animationIsPlaying == false)
-            {
-                gameRef.SpriteBatch.Draw(Game1.dialogueBox, new Vector2(15, 255), Color.White);
-                gameRef.SpriteBatch.DrawString(font, baseText, new Vector2(50, 280), Color.Black);
-            }
 
             if (gameRef.playPlayerAnim || gameRef.playMonsterAnim)
             {
-                gameRef.numf += (float)gameTime.ElapsedGameTime.TotalSeconds * speed * 35;
+                gameRef.numf += (float)gameTime.ElapsedGameTime.TotalMilliseconds; //or totalseconds
 
                 Rectangle rec;
                 if (gameRef.playPlayerAnim)
                 {
-                    rec = new Rectangle(0, 0, 450, 340);
+
+                    rec = gameRef.animController.ListaAnimations[SelectedManeuver.ManeuverAnimation].Position;
                 }
                 else
                 {
@@ -272,13 +234,16 @@ namespace Battle_Engine
                 gameRef.animController.currentAnimation.ListaRetangulos[gameRef.animController.currentAnimation.FrameAtual],
                 Color.White);
 
-                if (gameRef.numf > 250.0f)
+                float dur = (gameRef.animController.ListaAnimations[SelectedManeuver.ManeuverAnimation].NumeroAnimations *
+                    gameRef.animController.ListaAnimations[SelectedManeuver.ManeuverAnimation].Duration) + 500;
+                //if (gameRef.numf > 250.0f)
+                
+                if (gameRef.numf > dur)
                 {
                     Console.WriteLine("Reseting gameRef.numf " + gameRef.numf);
                     gameRef.playPlayerAnim = false;
                     gameRef.playMonsterAnim = false;
                     gameRef.numf = 0.0f;
-                    //gameRef.animationIsPlaying = false;
                     listIndex += 1;
                     actionManager.InvokeAction(listIndex);
                 }
@@ -291,33 +256,29 @@ namespace Battle_Engine
 
             gameRef.SpriteBatch.End();
 
+            drawTextSlow.Draw(gameRef.SpriteBatch);
+
+
             base.Draw(gameTime);
         }
 
         public void InitialText()
         {
             st = "Que comece a batalha!";
-            NextLineMethod(st);
+            drawTextSlow.NextLineMethod(st);
         }
 
         public void ShowChoiceMenu()
         {
-            //StateManager stateManager = (StateManager)gameRef.Services.GetService(typeof(IStateManager));
-            //stateManager.PushState(gameRef.ChoiceState);
-            
-            //I CAN RETRIVE THE SERVICE OR USE THE GAMEREF ONE (Cynthia that the said last one is better, no GC)
-
             gameRef.stateManager.PushState(gameRef.ChoiceState);
         }
 
         public void PlayerAnimation()
         {
-            //listIndex += 1;
-            //actionManager.InvokeAction(listIndex);
             gameRef.playPlayerAnim = true;
             gameRef.animationIsPlaying = true;
 
-            Maneuver action = gameRef.ChoiceState.SelectedManeuver;
+            Maneuver action = SelectedManeuver;
             gameRef.animController.SetAnimation(action.ManeuverAnimation);
             gameRef.animController.PlayAnimation(action.ManeuverAnimation);
         }
@@ -329,9 +290,6 @@ namespace Battle_Engine
 
             gameRef.animController.SetAnimation(AnimationKey.Explosion);
             gameRef.animController.PlayAnimation(AnimationKey.Explosion);
-
-            //listIndex += 1;
-            //actionManager.InvokeAction(listIndex);
         }
 
         public void MonsterLifeBar()
@@ -342,13 +300,13 @@ namespace Battle_Engine
 
         public void PlayerLifeBar()
         {
-            damage = gameRef.ChoiceState.SelectedManeuver.Damage;
+            damage = SelectedManeuver.Damage;
             barAnimation2 = true;
         }
 
         public void PlayerAction()
         {
-            Maneuver action = gameRef.ChoiceState.SelectedManeuver;
+            Maneuver action = SelectedManeuver;
             action.ManeuverAction.Invoke(); //null check?
         }
 
@@ -356,15 +314,13 @@ namespace Battle_Engine
         {
             if (gameRef.genericMonster.health > 0)
             {
-                st = gameRef.genericMonster.name + " se prepara para atacar.";
-                NextLineMethod(st);
-
+                st = "O oponente se prepara para atacar.";
+                drawTextSlow.NextLineMethod(st);
             }
             else
             {
-                st = gameRef.genericMonster.name + " desmaiou.";
-                NextLineMethod(st);
-                //dialogueText = "Monster died.";
+                st = "O oponente desmaiou.";
+                drawTextSlow.NextLineMethod(st);
                 MonsterAlive = false;
             }
         }
@@ -372,22 +328,21 @@ namespace Battle_Engine
         public void MonsterAttack()
         {
             st = "Oponente te ataca causando " + gameRef.genericMonster.power + " pontos de dano.";
-            NextLineMethod(st);
-            //gameRef.mainPlayer.health -= gameRef.genericMonster.power;
+            drawTextSlow.NextLineMethod(st);
         }
 
         public void CheckPlayerHealth()
         {
             if (gameRef.mainPlayer.health < 1)
             {
-                st = "Seu Polimon desmaiou, o oponente venceu.";
-                NextLineMethod(st);
+                st = gameRef.mainPlayer.name + " desmaiou, o oponente venceu.";
+                drawTextSlow.NextLineMethod(st);
                 PlayerAlive = false;
             }
             else
             {
                 st = "Você tem " + gameRef.mainPlayer.health.ToString() + " pontos de vida.";
-                NextLineMethod(st);
+                drawTextSlow.NextLineMethod(st);
             }
         }
 
@@ -395,21 +350,6 @@ namespace Battle_Engine
         {
             monsterBlink = true;
             gameRef.animationIsPlaying = true;
-        }
-
-        public void NextLineMethod(string text)
-        {
-            sentenceSize = text.Length;
-            done = false;
-            index = 0;
-            baseText = "";
-
-            ch = new char[text.Length];
-
-            for (int i = 0; i < text.Length; i++)
-            {
-                ch[i] = text[i];
-            }
         }
     }
 }

@@ -103,21 +103,21 @@ namespace Battle_Engine
         public void AttackMethod()
         {
             gamePlayState.st = "Você ataca o oponente com " + MainPlayer.weapon + " causando \n" + MainPlayer.power + " pontos de dano.";
-            gamePlayState.drawTextSlow.NextLineMethod(gamePlayState.st);
+            gamePlayState.drawTextSlow.NextSentence(gamePlayState.st);
 
         }
 
         public void WaitMethod()
         {
             gamePlayState.st = "Você se caga de medo e \n tenta sair de fininho.";
-            gamePlayState.drawTextSlow.NextLineMethod(gamePlayState.st);
+            gamePlayState.drawTextSlow.NextSentence(gamePlayState.st);
 
         }
 
         public void VacinaMethod()
         {
             gamePlayState.st = "Você atira uma injeção de \nCoronavac contra " + genericMonster.name;
-            gamePlayState.drawTextSlow.NextLineMethod(gamePlayState.st);
+            gamePlayState.drawTextSlow.NextSentence(gamePlayState.st);
         }
 
         protected override void LoadContent()
@@ -154,8 +154,6 @@ namespace Battle_Engine
                 Exit();
 
             Input.Update(gameTime);
-
-            ModuleManager.Update(gameTime);
 
             animController.Update(gameTime);
 

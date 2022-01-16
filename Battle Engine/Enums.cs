@@ -47,6 +47,7 @@ namespace Battle_Engine
         PlayerAction,
         CheckMonsterHealth,
         MonsterAnimation,
+        PlayerBlink,
         PlayerLifeBar,
         MonsterAttack,
         CheckPlayerHealth,

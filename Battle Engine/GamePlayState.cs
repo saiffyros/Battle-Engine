@@ -33,6 +33,7 @@ namespace Battle_Engine
         public MonsterAttackModule MonsterAttackModule;
         public CheckPlayerHealthModule CheckPlayerHealthModule;
         public GameOverModule gameOverModule;
+        public PlayerBlinkModule playerBlinkModule;
 
         public GamePlayState(Game game) : base(game)
         {
@@ -54,6 +55,7 @@ namespace Battle_Engine
             MonsterAttackModule = new MonsterAttackModule(gameRef);
             CheckPlayerHealthModule = new CheckPlayerHealthModule(gameRef);
             gameOverModule = new GameOverModule(gameRef);
+            playerBlinkModule = new PlayerBlinkModule(gameRef);
 
             ModuleManager.AddModule(ModuleKey.InitialText, initialTextModule);
             ModuleManager.AddModule(ModuleKey.ShowChoiceMenu, showChoiceMenuModule);
@@ -67,6 +69,7 @@ namespace Battle_Engine
             ModuleManager.AddModule(ModuleKey.MonsterAttack, MonsterAttackModule);
             ModuleManager.AddModule(ModuleKey.CheckPlayerHealth, CheckPlayerHealthModule);
             ModuleManager.AddModule(ModuleKey.GameOverModule, gameOverModule);
+            ModuleManager.AddModule(ModuleKey.PlayerBlink, playerBlinkModule);
 
             font = gameRef.Content.Load<SpriteFont>("font");
             titleFont = gameRef.Content.Load<SpriteFont>("titleFont");
@@ -88,6 +91,8 @@ namespace Battle_Engine
         {
             drawTextSlow.Update(gameTime);
 
+            ModuleManager.Update(gameTime);
+
             base.Update(gameTime);
         }
 
@@ -102,7 +107,7 @@ namespace Battle_Engine
 
             gameRef.SpriteBatch.Draw(gameRef.battlepadEnemy, new Rectangle(245, 165, 200, 50), Color.White);
 
-            gameRef.SpriteBatch.Draw(gameRef.playerTex, new Rectangle(25, 75, 192, 192), Color.White);
+            gameRef.SpriteBatch.Draw(gameRef.playerTex, new Rectangle(25, 65, 192, 192), Color.White);
 
             gameRef.SpriteBatch.Draw(gameRef.monsterTex, new Rectangle(250, 0, 192, 192), Color.White);
 
@@ -122,9 +127,9 @@ namespace Battle_Engine
 
             ModuleManager.Draw(gameRef.SpriteBatch);
 
-            gameRef.SpriteBatch.End();
-
             drawTextSlow.Draw(gameRef.SpriteBatch);
+            
+            gameRef.SpriteBatch.End();
 
             base.Draw(gameTime);
         }
@@ -134,6 +139,7 @@ namespace Battle_Engine
     {
         Game1 gameRef;
         string st = "";
+        bool ended = false;
         public InitialTextModule(Game1 game)
         {
             gameRef = game;
@@ -144,15 +150,16 @@ namespace Battle_Engine
             base.Initialize();
 
             st = "Um polimon selvagem apareceu! \nVamos batalhar!";
-            gameRef.gamePlayState.drawTextSlow.NextLineMethod(st);
+            gameRef.gamePlayState.drawTextSlow.NextSentence(st);
         }
 
         public override void Update(GameTime gameTime)
         {
-            if (gameRef.gamePlayState.drawTextSlow.done && Input.GetMousePressed())
+            if (!ended && gameRef.gamePlayState.drawTextSlow.done && Input.GetMousePressed())
             {
                 ModuleManager.ActivateModule(ModuleKey.ShowChoiceMenu);
                 Console.WriteLine("Opening Choices");
+                ended = true;
             }
 
             base.Update(gameTime);
@@ -162,6 +169,7 @@ namespace Battle_Engine
     public class ShowChoiceMenuModule : Module
     {
         Game1 gameRef;
+        string st;
         public ShowChoiceMenuModule(Game1 game)
         {
             gameRef = game;
@@ -170,8 +178,20 @@ namespace Battle_Engine
         public override void Initialize()
         {
             base.Initialize();
+            st = "O que " + gameRef.mainPlayer.name + " fará?";
+            gameRef.gamePlayState.drawTextSlow.NextSentence(st);
+            active = true;
+        }
 
-            gameRef.stateManager.PushState(gameRef.ChoiceState);
+        public override void Update(GameTime gameTime)
+        {
+            if (active && gameRef.gamePlayState.drawTextSlow.done)
+            {
+                gameRef.stateManager.PushState(gameRef.ChoiceState);
+                active = false;
+            }
+
+            base.Update(gameTime);
         }
     }
 
@@ -249,12 +269,8 @@ namespace Battle_Engine
         {
             base.Draw(spriteBatch);
 
-            if (monsterBlinkTimer < 0.2f)
-            {
-
-            }
-            else
-            {
+            if (monsterBlinkTimer > 0.2f)
+            { 
                 gameRef.SpriteBatch.Draw(gameRef.monsterTex, new Rectangle(250, 0, 192, 192), Color.Red);
             }
 
@@ -327,7 +343,7 @@ namespace Battle_Engine
             base.Initialize();
 
             st = gameRef.gamePlayState.SelectedManeuver.Description;
-            gameRef.gamePlayState.drawTextSlow.NextLineMethod(st);
+            gameRef.gamePlayState.drawTextSlow.NextSentence(st);
         }
 
         public override void Update(GameTime gameTime)
@@ -358,12 +374,12 @@ namespace Battle_Engine
             if (gameRef.genericMonster.health > 0)
             {
                 st = "O oponente se prepara para atacar.";
-                gameRef.gamePlayState.drawTextSlow.NextLineMethod(st);
+                gameRef.gamePlayState.drawTextSlow.NextSentence(st);
             }
             else
             {
                 st = "O oponente desmaiou.";
-                gameRef.gamePlayState.drawTextSlow.NextLineMethod(st);
+                gameRef.gamePlayState.drawTextSlow.NextSentence(st);
                 gameRef.gamePlayState.MonsterAlive = false;
             }
         }
@@ -419,7 +435,7 @@ namespace Battle_Engine
             {
                 Console.WriteLine("Monster Manuever duration: " + maneuverDuration);
                 timer = 0.0f;
-                ModuleManager.ActivateModule(ModuleKey.PlayerLifeBar);
+                ModuleManager.ActivateModule(ModuleKey.PlayerBlink);
             }         
         }
 
@@ -432,6 +448,47 @@ namespace Battle_Engine
             rec,
             gameRef.animController.currentAnimation.ListaRetangulos[gameRef.animController.currentAnimation.FrameAtual],
             Color.White);
+        }
+    }
+
+    public class PlayerBlinkModule : Module
+    {
+        Game1 gameRef;
+        float playerBlinkTimer = 0;
+        float playerBlinkEnd = 0;
+        public PlayerBlinkModule(Game1 game)
+        {
+            gameRef = game;
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            playerBlinkTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            playerBlinkEnd += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            base.Update(gameTime);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+
+            if (playerBlinkTimer > 0.2f)
+            {
+                gameRef.SpriteBatch.Draw(gameRef.playerTex, new Rectangle(25, 65, 192, 192), Color.Red);
+            }
+
+            if (playerBlinkTimer > 0.3f)
+            {
+                playerBlinkTimer = 0.0f;
+            }
+            if (playerBlinkEnd > 0.9)
+            {
+                playerBlinkTimer = 0.0f;
+                playerBlinkEnd = 0.0f;
+
+                ModuleManager.ActivateModule(ModuleKey.PlayerLifeBar);
+            }
         }
     }
 
@@ -489,7 +546,7 @@ namespace Battle_Engine
             base.Initialize();
 
             st = gameRef.genericMonster.name + " ataca usando " + gameRef.genericMonster.weapon + ".";
-            gameRef.gamePlayState.drawTextSlow.NextLineMethod(st);
+            gameRef.gamePlayState.drawTextSlow.NextSentence(st);
         }
 
         public override void Update(GameTime gameTime)
@@ -523,13 +580,13 @@ namespace Battle_Engine
             if (gameRef.mainPlayer.health < 1)
             {
                 st = gameRef.mainPlayer.name + " desmaiou, o oponente venceu.";
-                gameRef.gamePlayState.drawTextSlow.NextLineMethod(st);
+                gameRef.gamePlayState.drawTextSlow.NextSentence(st);
                 gameRef.gamePlayState.PlayerAlive = false;
             }
             else
             {
                 st = "Você tem " + gameRef.mainPlayer.health.ToString() + " pontos de vida.";
-                gameRef.gamePlayState.drawTextSlow.NextLineMethod(st);
+                gameRef.gamePlayState.drawTextSlow.NextSentence(st);
             }
         }
 

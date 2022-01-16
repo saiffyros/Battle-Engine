@@ -28,14 +28,10 @@ namespace Battle_Engine
             sentenceSize = 0;
         }
 
-
-        public void NextLineMethod(string text)
+        public void NextSentence(string text)
         {
+            ResetWritter();
             sentenceSize = text.Length;
-            done = false;
-            endedWriting = false;
-            index = 0;
-            baseText = "";
 
             ch = new char[text.Length];
 
@@ -43,6 +39,15 @@ namespace Battle_Engine
             {
                 ch[i] = text[i];
             }
+        }
+
+        private void ResetWritter()
+        {
+            baseText = "";
+            done = false;
+            endedWriting = false;
+            index = 0;
+            delay = 0;
         }
 
         public override void Update(GameTime gameTime)
@@ -55,7 +60,7 @@ namespace Battle_Engine
                 cronometro = 0;
                 index += 1;
 
-                if (index >= sentenceSize)
+                if (index == sentenceSize)
                 {
                     endedWriting = true;
                 }
@@ -77,7 +82,6 @@ namespace Battle_Engine
         {
             if (showDialogue == true)
             {
-                gameRef.SpriteBatch.Begin();
                 gameRef.SpriteBatch.Draw(Game1.dialogueBox, new Vector2(15, 255), Color.White);
                 gameRef.SpriteBatch.DrawString(Game1.font, baseText, new Vector2(50, 280), Color.Black);
 
@@ -86,8 +90,6 @@ namespace Battle_Engine
                     gameRef.SpriteBatch.Draw(gameRef.clickIcon, new Vector2(415, 323), Color.White);
 
                 }
-
-                gameRef.SpriteBatch.End();
             }
 
             base.Draw(spriteBatch);

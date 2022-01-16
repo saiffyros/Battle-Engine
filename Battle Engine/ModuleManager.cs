@@ -22,28 +22,16 @@ namespace Battle_Engine
             if (!ModulesList.ContainsKey(key))
             {
                 ModulesList.Add(key, module);
-            }
-            
+            }         
         }
 
         public static void ActivateModule(ModuleKey moduleName)
         {
-            currentState.active = false;
-
             if (ModulesList.ContainsKey(moduleName))
             {
                 currentState = ModulesList[moduleName];
                 currentState.Reset();
                 currentState.Initialize();
-                //currentState.active = true;
-            }
-        }
-
-        public static void StopModule()
-        {
-            if (currentState != null)
-            {
-                currentState.active = false;
             }
         }
 

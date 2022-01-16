@@ -9,7 +9,6 @@ namespace Battle_Engine
     public class Module
     {
         public bool active = false;
-        public bool ended = false;
         public string name = "";
 
         public Module()

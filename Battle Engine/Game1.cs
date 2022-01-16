@@ -42,6 +42,7 @@ namespace Battle_Engine
         public Texture2D playerTex, monsterTex, backgroundBattleBottom, backgroundBattle;
         public Texture2D battlepadPlayer, battlepadEnemy, playerBar, enemyBar, logoPT;
         public Texture2D poop, scratch;
+        public Texture2D clickIcon;
 
         public Game1()
         {
@@ -74,6 +75,7 @@ namespace Battle_Engine
             logoPT = Content.Load<Texture2D>("logoPT");
             poop = Content.Load<Texture2D>("poopAnim");
             scratch = Content.Load<Texture2D>("scratchAnim");
+            clickIcon = Content.Load<Texture2D>("clickIcon");
 
             animController = new AnimationController(this);
             explosionTex = Content.Load<Texture2D>("explosion");
@@ -132,7 +134,7 @@ namespace Battle_Engine
             Attack = new Maneuver("Tapa Frouxo", mainPlayer.name + " ataca usando " + mainPlayer.weapon + ".", 50, AttackMethod, AnimationKey.Scratch);
             Mascara = new Maneuver("Mandioca", "Problematizar um ataque.", 0, WaitMethod, AnimationKey.Poop);
             Mandioca = new Maneuver("Saco de Vento", "Problematizar um ataque.", 30, WaitMethod, AnimationKey.Mandioca);
-            Vacina = new Maneuver("Vacina", mainPlayer.name + " atira uma injeção de Coronavac contra " + genericMonster.name + ".", 30, VacinaMethod, AnimationKey.Vacina);
+            Vacina = new Maneuver("Vacina", mainPlayer.name + " atira uma injeção de Coronavac \ncontra " + genericMonster.name + ".", 30, VacinaMethod, AnimationKey.Vacina);
 
             MainPlayer.listManeuvers.Add(Attack);
             MainPlayer.listManeuvers.Add(Mascara);

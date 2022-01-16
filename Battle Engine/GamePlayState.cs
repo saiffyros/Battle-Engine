@@ -237,11 +237,6 @@ namespace Battle_Engine
             gameRef = game;
         }
 
-        public override void Initialize()
-        {
-            base.Initialize();
-        }
-
         public override void Update(GameTime gameTime)
         {
             monsterBlinkTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -564,11 +559,6 @@ namespace Battle_Engine
         public GameOverModule(Game1 game)
         {
             gameRef = game;
-        }
-
-        public override void Initialize()
-        {
-            base.Initialize();
         }
 
         public override void Update(GameTime gameTime)

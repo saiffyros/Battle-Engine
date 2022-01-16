@@ -79,7 +79,14 @@ namespace Battle_Engine
             {
                 gameRef.SpriteBatch.Begin();
                 gameRef.SpriteBatch.Draw(Game1.dialogueBox, new Vector2(15, 255), Color.White);
-                gameRef.SpriteBatch.DrawString(Game1.font, baseText, new Vector2(50, 280), Color.Black); ;
+                gameRef.SpriteBatch.DrawString(Game1.font, baseText, new Vector2(50, 280), Color.Black);
+
+                if (done)
+                {
+                    gameRef.SpriteBatch.Draw(gameRef.clickIcon, new Vector2(415, 323), Color.White);
+
+                }
+
                 gameRef.SpriteBatch.End();
             }
 

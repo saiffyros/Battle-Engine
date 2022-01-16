@@ -16,6 +16,12 @@ namespace Battle_Engine
         {
 
         }
+
+        public virtual void Initialize()
+        {
+
+        }
+
         public virtual void Update(GameTime gameTime)
         {
 

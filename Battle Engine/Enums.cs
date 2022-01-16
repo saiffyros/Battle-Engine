@@ -39,8 +39,18 @@ namespace Battle_Engine
 
     public enum ModuleKey
     {
-        Module1,
-        Module2
+        ShowChoiceMenu,
+        InitialText,
+        PlayerAnimation,
+        MonsterBlink,
+        MonsterLifeBar,
+        PlayerAction,
+        CheckMonsterHealth,
+        MonsterAnimation,
+        PlayerLifeBar,
+        MonsterAttack,
+        CheckPlayerHealth,
+        GameOverModule
     }
 
     public enum ScreenKey

@@ -19,7 +19,11 @@ namespace Battle_Engine
 
         public static void AddModule(ModuleKey key, Module module)
         {
-            ModulesList.Add(key, module);
+            if (!ModulesList.ContainsKey(key))
+            {
+                ModulesList.Add(key, module);
+            }
+            
         }
 
         public static void ActivateModule(ModuleKey moduleName)
@@ -30,7 +34,8 @@ namespace Battle_Engine
             {
                 currentState = ModulesList[moduleName];
                 currentState.Reset();
-                currentState.active = true;
+                currentState.Initialize();
+                //currentState.active = true;
             }
         }
 

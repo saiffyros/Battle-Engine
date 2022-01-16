@@ -10,13 +10,16 @@ namespace Battle_Engine
     {
         Game1 gameRef;
         public float cronometro;
-        public float letterTime = 0.05f;
+        public float letterTime = 0.08f;
         public float speed = 5.0f;
         public bool done = false;
         public string baseText = "";
         public char[] ch = new char[1];
         public int index = 0;
         public int sentenceSize;
+        public bool showDialogue = true;
+        public float delay = 0.0f;
+        public bool endedWriting = false;
 
         public DrawTextSlow(Game1 game)
         {
@@ -30,6 +33,7 @@ namespace Battle_Engine
         {
             sentenceSize = text.Length;
             done = false;
+            endedWriting = false;
             index = 0;
             baseText = "";
 
@@ -45,13 +49,23 @@ namespace Battle_Engine
         {
             cronometro += (float)gameTime.ElapsedGameTime.TotalSeconds * speed;
 
-            if (cronometro > letterTime && done == false && gameRef.animationIsPlaying == false)
+            if (cronometro > letterTime && endedWriting == false)
             {
                 baseText += ch[index];
                 cronometro = 0;
                 index += 1;
 
                 if (index >= sentenceSize)
+                {
+                    endedWriting = true;
+                }
+            }
+
+            if (endedWriting)
+            {
+                delay += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (delay > 0.5f)
                 {
                     done = true;
                 }
@@ -61,7 +75,7 @@ namespace Battle_Engine
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (gameRef.animationIsPlaying == false)
+            if (showDialogue == true)
             {
                 gameRef.SpriteBatch.Begin();
                 gameRef.SpriteBatch.Draw(Game1.dialogueBox, new Vector2(15, 255), Color.White);

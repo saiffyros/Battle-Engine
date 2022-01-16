@@ -53,7 +53,7 @@ namespace Battle_Engine
             Components.Add(_stateManager);
             gamePlayState = new GamePlayState(this);
             ChoiceState = new PlayerChoiceScreen(this);
-            _stateManager.PushState(gamePlayState);
+            //_stateManager.PushState(gamePlayState);
         }
 
         protected override void Initialize()
@@ -93,6 +93,8 @@ namespace Battle_Engine
             animController.AddAnimation(AnimationKey.Poop, poopAnim);
             animController.AddAnimation(AnimationKey.Scratch, scratchAnim);
 
+            _stateManager.PushState(gamePlayState);
+
             base.Initialize();
         }
 
@@ -118,29 +120,29 @@ namespace Battle_Engine
 
         protected override void LoadContent()
         {
-            Attack = new Maneuver("Tapa Frouxo", "Um tapa frouxo", 50, AttackMethod, AnimationKey.Scratch);
-            Mascara = new Maneuver("Mandioca", "Problematizar um ataque", 0, WaitMethod, AnimationKey.Poop);
-            Mandioca = new Maneuver("Saco de Vento", "Problematizar um ataque", 30, WaitMethod, AnimationKey.Mandioca);
-            Vacina = new Maneuver("Vacina", "Uma injeção de Coronavac", 30, VacinaMethod, AnimationKey.Vacina);
-
             MainPlayer = new Polimon("Dilma", 100, 50, "tapa", 20, 2, 100)
             {
                 level = 24,
             };
+            GenericMonster = new Polimon("Janaína", 150, 30, "tapa", 2, 0, 150)
+            {
+                level = 100
+            };
+
+            Attack = new Maneuver("Tapa Frouxo", mainPlayer.name + " ataca usando " + mainPlayer.weapon + ".", 50, AttackMethod, AnimationKey.Scratch);
+            Mascara = new Maneuver("Mandioca", "Problematizar um ataque.", 0, WaitMethod, AnimationKey.Poop);
+            Mandioca = new Maneuver("Saco de Vento", "Problematizar um ataque.", 30, WaitMethod, AnimationKey.Mandioca);
+            Vacina = new Maneuver("Vacina", mainPlayer.name + " atira uma injeção de Coronavac contra " + genericMonster.name + ".", 30, VacinaMethod, AnimationKey.Vacina);
 
             MainPlayer.listManeuvers.Add(Attack);
             MainPlayer.listManeuvers.Add(Mascara);
             MainPlayer.listManeuvers.Add(Mandioca);
             MainPlayer.listManeuvers.Add(Vacina);
 
-            GenericMonster = new Polimon("Janaína", 150, 30, "tapa", 2, 0, 150)
-            {
-                level = 100
-            };
-
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("font");
             dialogueBox = Content.Load<Texture2D>("dialogueBar");
+
         }
 
 
@@ -148,6 +150,10 @@ namespace Battle_Engine
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            Input.Update(gameTime);
+
+            ModuleManager.Update(gameTime);
 
             animController.Update(gameTime);
 

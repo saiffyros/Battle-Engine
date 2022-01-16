@@ -11,10 +11,10 @@ namespace Battle_Engine
     public class PlayerChoiceScreen : GameState
     {
         private SpriteFont font, titleFont;
-        //public Maneuver SelectedManeuver;
         private Texture2D buttonTexture;
         Texture2D _pixel;
         private List<Button> buttonList = new List<Button>();
+        float timer;
 
         public PlayerChoiceScreen(Game game) : base(game)
         {
@@ -27,6 +27,7 @@ namespace Battle_Engine
             Color[] data = new Color[1];
             data[0] = Color.White;
             _pixel.SetData(data);
+            timer = 0.0f;
             base.Initialize();
         }
 
@@ -65,7 +66,7 @@ namespace Battle_Engine
                 buttonList.Add(AttackBtn);
             }
 
-            Button cancelBtn = new Button(gameRef, "Arregar", new Vector2(50, 600), "cancelBtn")
+            Button cancelBtn = new Button(gameRef, "Voltar", new Vector2(50, 600), "cancelBtn")
             {
                 PenColour = Color.White,
             };
@@ -78,20 +79,24 @@ namespace Battle_Engine
 
         public void BackToPlayState()
         {
-            Console.WriteLine("Manuever: " + gameRef.gamePlayState.SelectedManeuver.Description);
+            Console.WriteLine("Manuever chosen: " + gameRef.gamePlayState.SelectedManeuver.Description);
 
             gameRef.currentAnimation = gameRef.gamePlayState.SelectedManeuver.ManeuverAnimation;
-            gameRef.stateManager.ChangeState(gameRef.gamePlayState);
-            GamePlayState.listIndex += 1;
-            Console.WriteLine("From choice " + GamePlayState.listIndex);
-            GamePlayState.actionManager.InvokeAction(GamePlayState.listIndex);
+            //gameRef.stateManager.ChangeState(gameRef.gamePlayState);
+            gameRef.stateManager.PopState();
+            ModuleManager.ActivateModule(ModuleKey.PlayerAnimation);
         }
 
         public override void Update(GameTime gameTime)
         {
-            foreach(Button button in buttonList)
+            timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (timer > 0.7f)
             {
-                button.Update(gameTime);
+                foreach (Button button in buttonList)
+                {
+                    button.Update(gameTime);
+                }
             }
 
             base.Update(gameTime);
@@ -106,9 +111,12 @@ namespace Battle_Engine
             //gameRef.SpriteBatch.Draw(gameRef.backgroundBattleBottom, new Rectangle(0, 340, 450, 340), Color.White);
             gameRef.SpriteBatch.End();
 
-            foreach (Button b in buttonList)
+            if (timer > 0.7f)
             {
-                b.Draw(gameTime, null);
+                foreach (Button b in buttonList)
+                {
+                    b.Draw(gameTime, null);
+                }
             }
 
             base.Draw(gameTime);

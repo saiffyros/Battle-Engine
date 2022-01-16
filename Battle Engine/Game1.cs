@@ -29,7 +29,6 @@ namespace Battle_Engine
         private StateManager _stateManager;
         public StateManager stateManager { get { return _stateManager; } }
         public SpriteBatch SpriteBatch { get { return _spriteBatch; } }
-        public PlayerChoiceScreen ChoiceState { get; private set; }
         public GamePlayState gamePlayState { get; private set; }
         public Texture2D explosionTex, light, vacina, mandioca;
         public Animation explosion, lightAnim, vacinaAnim, mandiocaAnim, poopAnim, scratchAnim;
@@ -53,7 +52,6 @@ namespace Battle_Engine
             _stateManager = new StateManager(this);
             Components.Add(_stateManager);
             gamePlayState = new GamePlayState(this);
-            ChoiceState = new PlayerChoiceScreen(this);
             //_stateManager.PushState(gamePlayState);
         }
 
@@ -154,6 +152,8 @@ namespace Battle_Engine
                 Exit();
 
             Input.Update(gameTime);
+
+            ModuleManager.Update(gameTime);
 
             animController.Update(gameTime);
 

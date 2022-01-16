@@ -34,6 +34,8 @@ namespace Battle_Engine
         public CheckPlayerHealthModule CheckPlayerHealthModule;
         public GameOverModule gameOverModule;
         public PlayerBlinkModule playerBlinkModule;
+        public ChooseActionModule chooseActionModule;
+        //##############################################################
 
         public GamePlayState(Game game) : base(game)
         {
@@ -56,7 +58,9 @@ namespace Battle_Engine
             CheckPlayerHealthModule = new CheckPlayerHealthModule(gameRef);
             gameOverModule = new GameOverModule(gameRef);
             playerBlinkModule = new PlayerBlinkModule(gameRef);
+            chooseActionModule = new ChooseActionModule(gameRef);
 
+            ModuleManager.AddModule(ModuleKey.ChooseActionModule, chooseActionModule);
             ModuleManager.AddModule(ModuleKey.InitialText, initialTextModule);
             ModuleManager.AddModule(ModuleKey.ShowChoiceMenu, showChoiceMenuModule);
             ModuleManager.AddModule(ModuleKey.PlayerAnimation, playerAnimationModule);
@@ -90,8 +94,6 @@ namespace Battle_Engine
         public override void Update(GameTime gameTime)
         {
             drawTextSlow.Update(gameTime);
-
-            ModuleManager.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -187,11 +189,99 @@ namespace Battle_Engine
         {
             if (active && gameRef.gamePlayState.drawTextSlow.done)
             {
-                gameRef.stateManager.PushState(gameRef.ChoiceState);
+                ModuleManager.ActivateModule(ModuleKey.ChooseActionModule);
+                //gameRef.stateManager.PushState(gameRef.ChoiceState);
                 active = false;
             }
 
             base.Update(gameTime);
+        }
+    }
+
+    public class ChooseActionModule : Module
+    {
+        Game1 gameRef;
+        private List<Button> buttonList = new List<Button>();
+        float timer;
+        public ChooseActionModule(Game1 game)
+        {
+            gameRef = game;
+        }
+
+        public void BackToPlayState()
+        {
+            Console.WriteLine("Manuever chosen: " + gameRef.gamePlayState.SelectedManeuver.Description);
+
+            gameRef.currentAnimation = gameRef.gamePlayState.SelectedManeuver.ManeuverAnimation;
+            ModuleManager.ActivateModule(ModuleKey.PlayerAnimation);
+        }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            timer = 0.0f;
+            foreach (Maneuver maneuver in gameRef.mainPlayer.listManeuvers)
+            {
+                Vector2 posBtn;
+                if (gameRef.mainPlayer.listManeuvers.IndexOf(maneuver) == 0)
+                {
+                    posBtn = new Vector2(20, 385);
+                }
+                else if (gameRef.mainPlayer.listManeuvers.IndexOf(maneuver) == 1)
+                {
+                    posBtn = new Vector2(240, 385);
+                }
+                else if (gameRef.mainPlayer.listManeuvers.IndexOf(maneuver) == 2)
+                {
+                    posBtn = new Vector2(20, 490);
+                }
+                else
+                {
+                    posBtn = new Vector2(240, 490);
+                }
+
+                Button AttackBtn = new Button(gameRef, maneuver.Name, posBtn, "buttonTexture");
+
+                AttackBtn.Click += delegate { gameRef.gamePlayState.SelectedManeuver = maneuver; BackToPlayState(); };
+                buttonList.Add(AttackBtn);
+            }
+
+            Button cancelBtn = new Button(gameRef, "Voltar", new Vector2(50, 600), "cancelBtn")
+            {
+                PenColour = Color.White,
+            };
+            //MUDAR!!!!!!!!!!!!!
+            cancelBtn.Click += delegate { gameRef.gamePlayState.SelectedManeuver = gameRef.mainPlayer.listManeuvers[1]; BackToPlayState(); };
+            buttonList.Add(cancelBtn);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (timer > 0.7f)
+            {
+                foreach (Button button in buttonList)
+                {
+                    button.Update(gameTime);
+                }
+            }
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+
+            if (timer > 0.7f)
+            {
+                foreach (Button b in buttonList)
+                {
+                    b.Draw(spriteBatch);
+                }
+            }
         }
     }
 

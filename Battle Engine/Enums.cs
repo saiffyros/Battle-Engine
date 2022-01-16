@@ -51,7 +51,9 @@ namespace Battle_Engine
         PlayerLifeBar,
         MonsterAttack,
         CheckPlayerHealth,
-        GameOverModule
+        GameOverModule,
+
+        ChooseActionModule
     }
 
     public enum ScreenKey

@@ -76,7 +76,7 @@ namespace Battle_Engine
             }
         }
 
-        public void Draw(GameTime gameTime, Matrix? transform)
+        public void Draw(SpriteBatch spriteBatch)
         {
             var colour = Color.White;
 
@@ -86,18 +86,18 @@ namespace Battle_Engine
             if (_active == true)
             {
 
-                gameRef._spriteBatch.Begin(transformMatrix: transform);
-                gameRef._spriteBatch.Draw(_texture, Rectangle, colour);
-                gameRef._spriteBatch.End();
+                //spriteBatch.Begin();
+                spriteBatch.Draw(_texture, Rectangle, colour);
+                //spriteBatch.End();
 
                 if (!string.IsNullOrEmpty(Text))
                 {
                     var x = (Rectangle.X + (Rectangle.Width / 2)) - (_font.MeasureString(Text).X / 2);
                     var y = (Rectangle.Y + (Rectangle.Height / 2)) - (_font.MeasureString(Text).Y / 2);
 
-                    gameRef._spriteBatch.Begin(transformMatrix: transform);
-                    gameRef._spriteBatch.DrawString(_font, Text, new Vector2(x, y), PenColour);
-                    gameRef._spriteBatch.End();
+                    //spriteBatch.Begin(transformMatrix: transform);
+                    spriteBatch.DrawString(_font, Text, new Vector2(x, y), PenColour);
+                    //spriteBatch.End();
                 }
             }
         }
